@@ -24,10 +24,7 @@ public class UserService {
         if (user.isEmpty()) {
             return null;
         }
-        if (!user.get().getPassword().equals(
-                passwordEncoder.encode(userDTO.getPassword())
-            )
-        ) {
+        if (!passwordEncoder.matches(userDTO.getPassword(), user.get().getPassword())){
             return null;
         }
         user.get().setPassword(null);
@@ -40,6 +37,8 @@ public class UserService {
             return null;
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        newUser = Optional.of(userRepository.save(user));
+        newUser.get().setPassword(null);
+        return newUser.get();
     }
 }
