@@ -3,7 +3,6 @@ package org.example.dziennikbackend.services;
 import org.example.dziennikbackend.models.UserDTO;
 import org.example.dziennikbackend.models.UserEntity;
 import org.example.dziennikbackend.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
