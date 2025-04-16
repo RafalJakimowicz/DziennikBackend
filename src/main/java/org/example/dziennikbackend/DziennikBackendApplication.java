@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DziennikBackendApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DziennikBackendApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DziennikBackendApplication.class, args);
+    }
 
 }
