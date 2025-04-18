@@ -1,35 +1,41 @@
 package org.example.dziennikbackend.controllers;
 
-import org.example.dziennikbackend.models.UserDTO;
-import org.example.dziennikbackend.models.UserEntity;
+import org.example.dziennikbackend.configs.JwtUtil;
+import org.example.dziennikbackend.models.DTOs.JwtTokenDTO;
+import org.example.dziennikbackend.models.DTOs.UserDTO;
+import org.example.dziennikbackend.models.Entities.AppUser;
 import org.example.dziennikbackend.services.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/public/users")
+@RequestMapping("/api/public/auth")
 public class AuthController {
     private final AuthService authService;
-    public AuthController(AuthService authService) {
+    private final JwtUtil jwtUtil;
+    public AuthController(AuthService authService, JwtUtil jwtUtil) {
         this.authService = authService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserEntity> registerUser(@RequestBody UserEntity _user) {
-        UserEntity userEntity = authService.registerUser(_user);
-        if (userEntity == null) {
+    public ResponseEntity<JwtTokenDTO> registerUser(@RequestBody AppUser _user) {
+        AppUser appUser = authService.registerUser(_user);
+        if (appUser == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(userEntity, HttpStatus.CREATED);
+        String token = jwtUtil.generateToken(new UserDTO(_user.getLogin(), _user.getPassword()), 24);
+        return new ResponseEntity<>(new JwtTokenDTO(token), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserEntity> loginUser(@RequestBody UserDTO _user) {
-        UserEntity user = authService.validateCredentials(_user);
+    public ResponseEntity<JwtTokenDTO> loginUser(@RequestBody UserDTO _user) {
+        AppUser user = authService.validateCredentials(_user);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        String token = jwtUtil.generateToken(_user, 24);
+        return new ResponseEntity<>(new JwtTokenDTO(token), HttpStatus.OK);
     }
 }

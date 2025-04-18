@@ -1,7 +1,7 @@
 package org.example.dziennikbackend.services;
 
-import org.example.dziennikbackend.models.UserDTO;
-import org.example.dziennikbackend.models.UserEntity;
+import org.example.dziennikbackend.models.DTOs.UserDTO;
+import org.example.dziennikbackend.models.Entities.AppUser;
 import org.example.dziennikbackend.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,8 +18,8 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserEntity validateCredentials(UserDTO userDTO) {
-        Optional<UserEntity> user = userRepository.findByLogin(userDTO.getLogin());
+    public AppUser validateCredentials(UserDTO userDTO) {
+        Optional<AppUser> user = userRepository.findByLogin(userDTO.getLogin());
         if (user.isEmpty()) {
             return null;
         }
@@ -30,8 +30,8 @@ public class AuthService {
         return user.get();
     }
 
-    public UserEntity registerUser(UserEntity user){
-        Optional<UserEntity> newUser = userRepository.findByLogin(user.getLogin());
+    public AppUser registerUser(AppUser user){
+        Optional<AppUser> newUser = userRepository.findByLogin(user.getLogin());
         if (newUser.isPresent()) {
             return null;
         }

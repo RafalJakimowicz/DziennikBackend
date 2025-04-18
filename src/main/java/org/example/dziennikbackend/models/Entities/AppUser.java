@@ -1,9 +1,9 @@
-package org.example.dziennikbackend.models;
+package org.example.dziennikbackend.models.Entities;
 
 import jakarta.persistence.*;
 
 @Entity
-public class UserEntity{
+public class AppUser {
 
     @Id
     @GeneratedValue
@@ -14,8 +14,8 @@ public class UserEntity{
     private String login;
     private String password;
 
-    public UserEntity() {}
-    public UserEntity(String name, String surname, String email, String login, String password) {
+    public AppUser() {}
+    public AppUser(String name, String surname, String email, String login, String password) {
         this.name = name;
         this.surname = surname;
         this.email = email;

@@ -1,4 +1,4 @@
-package org.example.dziennikbackend.models;
+package org.example.dziennikbackend.models.DTOs;
 
 public class UserDTO {
     private String login;
