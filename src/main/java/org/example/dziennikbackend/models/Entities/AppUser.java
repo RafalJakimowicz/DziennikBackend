@@ -10,8 +10,13 @@ public class AppUser {
     private Long id;
     private String name;
     private String surname;
+
+    @Column(unique = true)
     private String email;
+
+    @Column(unique = true, nullable = false)
     private String login;
+    @Column(nullable = false)
     private String password;
 
     public AppUser() {}
