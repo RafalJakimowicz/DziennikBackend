@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/public/**").permitAll()  // Public endpoints
-                        .anyRequest().permitAll()             // Secure everything else
+                        .anyRequest().authenticated()      // Secure everything else
                 )
                 .httpBasic(Customizer.withDefaults()); // Use HTTP Basic Authentication
 
