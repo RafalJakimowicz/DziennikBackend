@@ -15,14 +15,15 @@ public class Student {
     @Column(unique = true, nullable = false)
     private Integer album_number;
 
-    @Column(nullable = false)
-    private String major;
+    @ManyToOne
+    @JoinColumn(name = "major_id")
+    private Major major;
 
     @Column(nullable = false)
     private Integer year;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'ACTIVE'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'AKTYWNY'")
     private StudentStatus studentStatus;
 
     public Student() {}
@@ -30,6 +31,22 @@ public class Student {
         this.name = name;
         this.surname = surname;
         this.album_number = album_number;
+    }
+
+    public Major getMajor(){
+        return this.major;
+    }
+
+    public void setMajor(Major major){
+        this.major = major;
+    }
+
+    public Integer getYear(){
+        return this.year;
+    }
+
+    public void setYear(Integer year){
+        this.year = year;
     }
 
     public Long getId() {
