@@ -41,6 +41,11 @@ public class Major {
         semester.setMajor(this);
     }
 
+    public void removeSemester(Semester semester){
+        this.semesters.remove(semester);
+        semester.setMajor(null);
+    }
+
     public void setShortName(String shortName) {
         this.shortName = shortName;
     }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Semester {
@@ -22,12 +23,33 @@ public class Semester {
     @JoinColumn(name = "major_id")
     private Major major;
 
+    @OneToMany(mappedBy = "semester")
+    private List<CourseEdition> courseEditions;
+
     public Semester() {}
     public Semester(String code, LocalDateTime start, LocalDateTime end, Major major) {
         this.code = code;
         this.start = start;
         this.end = end;
         this.major = major;
+    }
+
+    public void removeCourseEdition(CourseEdition edition){
+        this.courseEditions.add(edition);
+        edition.setSemester(this);
+    }
+
+    public void addCourseEdition(CourseEdition edition){
+        this.courseEditions.add(edition);
+        edition.setSemester(this);
+    }
+
+    public void setCourseEditions(List<CourseEdition> courseEditions) {
+        this.courseEditions = courseEditions;
+    }
+
+    public List<CourseEdition> getCourseEditions() {
+        return this.courseEditions;
     }
 
     public Long getId() {

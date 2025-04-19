@@ -3,6 +3,8 @@ package org.example.dziennikbackend.models.Entities;
 import jakarta.persistence.*;
 import org.example.dziennikbackend.models.Enums.StudentStatus;
 
+import java.util.List;
+
 @Entity
 public class Student {
     @Id
@@ -26,11 +28,74 @@ public class Student {
     @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'AKTYWNY'")
     private StudentStatus studentStatus;
 
+    @OneToMany(mappedBy = "student")
+    private List<StudentInGroup> studentInGroups;
+
+    @OneToMany(mappedBy = "student")
+    private List<Grade> grades;
+
+    @OneToMany(mappedBy = "student")
+    private List<Attendance> attendances;
+
     public Student() {}
     public Student(String name, String surname, Integer album_number) {
         this.name = name;
         this.surname = surname;
         this.album_number = album_number;
+    }
+
+    public void removeAttendance(Attendance attendance){
+        this.attendances.remove(attendance);
+        attendance.setStudent(null);
+    }
+
+    public void addAttendance(Attendance attendance){
+        this.attendances.add(attendance);
+        attendance.setStudent(this);
+    }
+
+    public void setAttendances(List<Attendance> attendances) {
+        this.attendances = attendances;
+    }
+
+    public List<Attendance> getAttendances() {
+        return this.attendances;
+    }
+
+    public void removeGrade(Grade grade){
+        this.grades.remove(grade);
+        grade.setStudent(this);
+    }
+
+    public void addGrade(Grade grade){
+        this.grades.add(grade);
+        grade.setStudent(this);
+    }
+
+    public void setGrades(List<Grade> grades) {
+        this.grades = grades;
+    }
+
+    public List<Grade> getGrades() {
+        return this.grades;
+    }
+
+    public void removeStudentInGroup(StudentInGroup sg){
+        this.studentInGroups.remove(sg);
+        sg.setStudent(null);
+    }
+
+    public void addStudentInGroup(StudentInGroup sg){
+        this.studentInGroups.add(sg);
+        sg.setStudent(this);
+    }
+
+    public List<StudentInGroup> getStudentInGroups() {
+        return this.studentInGroups;
+    }
+
+    public void setStudentInGroups(List<StudentInGroup> studentInGroups) {
+        this.studentInGroups = studentInGroups;
     }
 
     public Major getMajor(){

@@ -2,6 +2,8 @@ package org.example.dziennikbackend.models.Entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class CourseEdition {
     @Id
@@ -20,11 +22,33 @@ public class CourseEdition {
     @JoinColumn(name="user_id", nullable = false)
     private AppUser user;
 
+    @OneToMany(mappedBy = "courseEdition")
+    private List<CoursePart> courseParts;
+
+
     public CourseEdition() {}
     public CourseEdition(Course course, Semester semester, AppUser user) {
         this.course = course;
         this.semester = semester;
         this.user = user;
+    }
+
+    public void removeCoursePart(CoursePart part){
+        this.courseParts.remove(part);
+        part.setEdition(null);
+    }
+
+    public void addCoursePart(CoursePart part){
+        this.courseParts.add(part);
+        part.setEdition(this);
+    }
+
+    public void setCourseParts(List<CoursePart> courseParts) {
+        this.courseParts = courseParts;
+    }
+
+    public List<CoursePart> getCourseParts() {
+        return this.courseParts;
     }
 
     public Long getId() {

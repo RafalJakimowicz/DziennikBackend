@@ -2,6 +2,7 @@ package org.example.dziennikbackend.models.Entities;
 
 import jakarta.persistence.*;
 import org.example.dziennikbackend.models.Enums.AttendanceStatus;
+import org.example.dziennikbackend.models.Enums.StudentStatus;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +21,8 @@ public class Attendance {
     @JoinColumn(name="student_id")
     private Student student;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'NIEOBECNY'")
     private AttendanceStatus status;
 
     @ManyToOne
@@ -53,7 +56,7 @@ public class Attendance {
         return this.student;
     }
 
-    public void setStudent(){
+    public void setStudent(Student student){
         this.student = student;
     }
 
