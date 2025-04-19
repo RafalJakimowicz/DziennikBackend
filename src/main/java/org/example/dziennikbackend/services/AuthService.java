@@ -1,6 +1,6 @@
 package org.example.dziennikbackend.services;
 
-import org.example.dziennikbackend.models.DTOs.UserDTO;
+import org.example.dziennikbackend.models.DTOs.AuthDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
 import org.example.dziennikbackend.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,12 +18,12 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public AppUser validateCredentials(UserDTO userDTO) {
-        Optional<AppUser> user = userRepository.findByLogin(userDTO.getLogin());
+    public AppUser validateCredentials(AuthDTO authDTO) {
+        Optional<AppUser> user = userRepository.findByLogin(authDTO.getLogin());
         if (user.isEmpty()) {
             return null;
         }
-        if (!passwordEncoder.matches(userDTO.getPassword(), user.get().getPassword())){
+        if (!passwordEncoder.matches(authDTO.getPassword(), user.get().getPassword())){
             return null;
         }
         user.get().setPassword(null);

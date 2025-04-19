@@ -1,10 +1,8 @@
 package org.example.dziennikbackend.configs;
 
-import org.example.dziennikbackend.models.DTOs.UserDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.dziennikbackend.models.DTOs.AuthDTO;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.*;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.util.Date;
 import java.util.function.Function;
@@ -30,14 +28,14 @@ public class JwtUtil{
         return extractExpirationDateFromToken(token).before(new Date());
     }
 
-    public String generateToken(UserDTO user, int expirationHours){
+    public String generateToken(AuthDTO user, int expirationHours){
         return Jwts.builder().setSubject(user.getLogin())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60*expirationHours))
                 .signWith(SignatureAlgorithm.HS512, TOKEN_KEY).compact();
     }
 
-    public Boolean validateToken(String token, UserDTO user) {
+    public Boolean validateToken(String token, AuthDTO user) {
         final String username = this.extractUsernameFromToken(token);
         return (username.equals(user.getLogin()) && !isTokenExpired(token));
     }

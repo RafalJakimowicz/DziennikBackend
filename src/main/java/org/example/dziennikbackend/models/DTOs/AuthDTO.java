@@ -1,11 +1,11 @@
 package org.example.dziennikbackend.models.DTOs;
 
-public class UserDTO {
+public class AuthDTO {
     private String login;
     private String password;
 
-    public UserDTO() {}
-    public UserDTO(String login, String password) {
+    public AuthDTO() {}
+    public AuthDTO(String login, String password) {
         this.login = login;
         this.password = password;
     }

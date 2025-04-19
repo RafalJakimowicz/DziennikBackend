@@ -3,6 +3,7 @@ package org.example.dziennikbackend.models.Entities;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name="users")
 public class AppUser {
 
     @Id
