@@ -38,4 +38,10 @@ public class AuthController {
         String token = jwtUtil.generateToken(_user, 24);
         return new ResponseEntity<>(new JwtTokenDTO(token), HttpStatus.OK);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<JwtTokenDTO> logoutUser (@RequestBody JwtTokenDTO token){
+        jwtUtil.revokeToken(token.getToken());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

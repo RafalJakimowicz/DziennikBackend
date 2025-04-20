@@ -18,7 +18,7 @@ public class Student {
     private String surname;
 
     @Column(unique = true, nullable = false)
-    private Integer album_number;
+    private Integer albumNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "major_id")
@@ -62,7 +62,7 @@ public class Student {
     public Student(String name, String surname, Integer album_number) {
         this.name = name;
         this.surname = surname;
-        this.album_number = album_number;
+        this.albumNumber = album_number;
     }
 
     public void removeAttendance(Attendance attendance){
@@ -156,11 +156,11 @@ public class Student {
     }
 
     public void setAlbumNumber(Integer album_number){
-        this.album_number = album_number;
+        this.albumNumber = album_number;
     }
 
     public Integer getAlbumNumber(){
-        return this.album_number;
+        return this.albumNumber;
     }
 
     public void setStatus(StudentStatus studentStatus){
