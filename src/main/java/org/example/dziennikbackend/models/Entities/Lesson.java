@@ -1,8 +1,10 @@
 package org.example.dziennikbackend.models.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,7 +14,7 @@ public class Lesson {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="group_id")
     private Group group;
 
@@ -26,8 +28,14 @@ public class Lesson {
 
     private String room;
 
-    @OneToMany(mappedBy = "lesson")
-    private List<Attendance> attendances;
+    @OneToMany(
+            mappedBy = "lesson",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<Attendance> attendances = new ArrayList<>();
 
     public Lesson() {}
     public Lesson(Group group, LocalDateTime start, LocalDateTime end, String subject, String room){

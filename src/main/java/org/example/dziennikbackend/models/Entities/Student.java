@@ -1,8 +1,10 @@
 package org.example.dziennikbackend.models.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.example.dziennikbackend.models.Enums.StudentStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +20,7 @@ public class Student {
     @Column(unique = true, nullable = false)
     private Integer album_number;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "major_id")
     private Major major;
 
@@ -29,14 +31,32 @@ public class Student {
     @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'AKTYWNY'")
     private StudentStatus studentStatus;
 
-    @OneToMany(mappedBy = "student")
-    private List<StudentInGroup> studentInGroups;
+    @OneToMany(
+            mappedBy = "student",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<StudentInGroup> studentInGroups= new ArrayList<>();
 
-    @OneToMany(mappedBy = "student")
-    private List<Grade> grades;
+    @OneToMany(
+            mappedBy = "student",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<Grade> grades= new ArrayList<>();
 
-    @OneToMany(mappedBy = "student")
-    private List<Attendance> attendances;
+    @OneToMany(
+            mappedBy = "student",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<Attendance> attendances= new ArrayList<>();
 
     public Student() {}
     public Student(String name, String surname, Integer album_number) {
@@ -135,11 +155,11 @@ public class Student {
         return this.surname;
     }
 
-    public void setAlbum_number(Integer album_number){
+    public void setAlbumNumber(Integer album_number){
         this.album_number = album_number;
     }
 
-    public Integer getAlbum_number(){
+    public Integer getAlbumNumber(){
         return this.album_number;
     }
 

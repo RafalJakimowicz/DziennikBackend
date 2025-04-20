@@ -1,7 +1,9 @@
 package org.example.dziennikbackend.models.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,8 +25,14 @@ public class CourseEdition {
     @JoinColumn(name="user_id", nullable = false)
     private AppUser user;
 
-    @OneToMany(mappedBy = "courseEdition")
-    private List<CoursePart> courseParts;
+    @OneToMany(
+            mappedBy = "edition",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<CoursePart> courseParts = new ArrayList<>();
 
 
     public CourseEdition() {}

@@ -1,9 +1,11 @@
 package org.example.dziennikbackend.models.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.example.dziennikbackend.models.Enums.ClassesTypes;
 import org.example.dziennikbackend.models.Enums.StudentStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,12 +15,18 @@ public class CoursePart {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="course_edition_id", nullable = false)
     private CourseEdition edition;
 
-    @OneToMany(mappedBy = "coursePart")
-    private List<Group> groups;
+    @OneToMany(
+            mappedBy = "coursePart",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<Group> groups = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "VARCHAR(20)")

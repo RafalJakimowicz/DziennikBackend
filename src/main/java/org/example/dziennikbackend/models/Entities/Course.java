@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,8 +21,13 @@ public class Course {
     private Short ects;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "course")
-    private List<CourseEdition> courseEditions;
+    @OneToMany(
+            mappedBy = "course",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<CourseEdition> courseEditions = new ArrayList<>();
 
     public Course() {}
     public Course(String name, String code, Short ects){

@@ -1,7 +1,9 @@
 package org.example.dziennikbackend.models.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,24 +13,42 @@ public class Group {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="course_part_id")
     private CoursePart coursePart;
 
     private String code;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private AppUser user;
 
-    @OneToMany(mappedBy = "group")
-    private List<Lesson> lessons;
+    @OneToMany(
+            mappedBy = "group",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<Lesson> lessons = new ArrayList<>();
 
-    @OneToMany(mappedBy = "group")
-    private List<StudentInGroup> studentInGroups;
+    @OneToMany(
+            mappedBy = "group",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<StudentInGroup> studentInGroups = new ArrayList<>();
 
-    @OneToMany(mappedBy = "group")
-    private List<Grade> grades;
+    @OneToMany(
+            mappedBy = "group",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<Grade> grades = new ArrayList<>();
 
     public Group() {}
     public Group(CoursePart part, String code, AppUser user){

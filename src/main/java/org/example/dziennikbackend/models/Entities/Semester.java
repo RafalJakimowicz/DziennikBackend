@@ -1,9 +1,11 @@
 package org.example.dziennikbackend.models.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,12 +22,18 @@ public class Semester {
     @Column(nullable = false)
     private LocalDateTime end;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "major_id")
     private Major major;
 
-    @OneToMany(mappedBy = "semester")
-    private List<CourseEdition> courseEditions;
+    @OneToMany(
+            mappedBy = "semester",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<CourseEdition> courseEditions = new ArrayList<>();
 
     public Semester() {}
     public Semester(String code, LocalDateTime start, LocalDateTime end, Major major) {

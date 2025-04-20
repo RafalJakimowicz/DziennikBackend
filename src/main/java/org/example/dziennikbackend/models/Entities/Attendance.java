@@ -13,11 +13,11 @@ public class Attendance {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="lesson_id")
     private Lesson lesson;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="student_id")
     private Student student;
 
@@ -25,10 +25,11 @@ public class Attendance {
     @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'NIEOBECNY'")
     private AttendanceStatus status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private AppUser user;
 
+    @Column(nullable = false)
     private LocalDateTime date;
 
     public Attendance(){}

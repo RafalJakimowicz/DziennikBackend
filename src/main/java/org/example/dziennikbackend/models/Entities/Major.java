@@ -16,11 +16,21 @@ public class Major {
     private String shortName;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "major")
+    @OneToMany(
+            mappedBy = "major",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
     private List<Student> students = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "major")
+    @OneToMany(
+            mappedBy = "major",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
     private List<Semester> semesters = new ArrayList<>();
 
     public Major() {}

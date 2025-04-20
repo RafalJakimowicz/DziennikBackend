@@ -16,7 +16,7 @@ public class Grade {
     private Long id;
 
     @JoinColumn(name = "student_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Student student;
 
     @Column(precision = 5, scale = 2, nullable = false)
@@ -27,14 +27,14 @@ public class Grade {
 
     private String comment;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private AppUser user;
 
     @Column(nullable = false)
     private LocalDateTime date;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="group_id")
     private Group group;
 

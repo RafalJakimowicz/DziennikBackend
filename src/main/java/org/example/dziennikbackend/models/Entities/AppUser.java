@@ -2,6 +2,7 @@ package org.example.dziennikbackend.models.Entities;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,17 +23,17 @@ public class AppUser {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user")
-    private List<CourseEdition> courseEditions;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<CourseEdition> courseEditions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Attendance> attendances;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Attendance> attendances = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Group> groups;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Group> groups = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Grade> grades;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Grade> grades = new ArrayList<>();
 
     public AppUser() {}
     public AppUser(String name, String surname, String email, String login, String password) {
