@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "grades")
 public class Grade {
     @Id
     @GeneratedValue
@@ -33,6 +34,11 @@ public class Grade {
     @Column(nullable = false)
     private LocalDateTime date;
 
+    @ManyToOne
+    @JoinColumn(name="group_id")
+    private Group group;
+
+
     public Grade() {}
     public Grade(Student student, BigDecimal score, String comment, AppUser user, LocalDateTime date) {
         this.student = student;
@@ -40,6 +46,14 @@ public class Grade {
         this.comment = comment;
         this.user = user;
         this.date = date;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public Group getGroup() {
+        return this.group;
     }
 
     public Long getId() {

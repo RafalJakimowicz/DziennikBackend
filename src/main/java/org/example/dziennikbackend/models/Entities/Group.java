@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "groups")
 public class Group {
     @Id
     @GeneratedValue
@@ -26,11 +27,32 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<StudentInGroup> studentInGroups;
 
+    @OneToMany(mappedBy = "group")
+    private List<Grade> grades;
+
     public Group() {}
     public Group(CoursePart part, String code, AppUser user){
         this.coursePart = part;
         this.code = code;
         this.user = user;
+    }
+
+    public void removeGrade(Grade grade){
+        this.grades.remove(grade);
+        grade.setGroup(null);
+    }
+
+    public void addGrade(Grade grade){
+        this.grades.add(grade);
+        grade.setGroup(this);
+    }
+
+    public void setGrades(List<Grade> grades) {
+        this.grades = grades;
+    }
+
+    public List<Grade> getGrades() {
+        return this.grades;
     }
 
     public void removeStudentInGroup(StudentInGroup sg){

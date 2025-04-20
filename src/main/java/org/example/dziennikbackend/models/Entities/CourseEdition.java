@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "course_editions")
 public class CourseEdition {
     @Id
     @GeneratedValue

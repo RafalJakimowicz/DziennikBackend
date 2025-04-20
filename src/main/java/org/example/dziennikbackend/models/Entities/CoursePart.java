@@ -7,6 +7,7 @@ import org.example.dziennikbackend.models.Enums.StudentStatus;
 import java.util.List;
 
 @Entity
+@Table(name = "course_parts")
 public class CoursePart {
     @Id
     @GeneratedValue
