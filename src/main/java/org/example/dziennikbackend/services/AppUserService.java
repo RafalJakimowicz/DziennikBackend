@@ -1,7 +1,7 @@
 package org.example.dziennikbackend.services;
 
 import org.example.dziennikbackend.models.Entities.AppUser;
-import org.example.dziennikbackend.repositories.UserRepository;
+import org.example.dziennikbackend.repositories.AppUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -10,28 +10,28 @@ import java.util.Optional;
 
 @Service
 public class AppUserService {
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
-    public AppUserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    public AppUserService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
+        this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     public List<AppUser> getAllUsers(){
-        return userRepository.findAll();
+        return appUserRepository.findAll();
     }
 
     public AppUser getUserById(Long id){
-        Optional<AppUser> user = userRepository.findById(id);
+        Optional<AppUser> user = appUserRepository.findById(id);
         return user.orElse(null);
     }
 
     public AppUser createUser(AppUser user){
-        return userRepository.save(user);
+        return appUserRepository.save(user);
     }
 
     public Long getUserIdByLogin(String login){
-        Optional<AppUser> user = userRepository.findByLogin(login);
+        Optional<AppUser> user = appUserRepository.findByLogin(login);
         if(user.isEmpty()){
             return null;
         }
@@ -39,7 +39,7 @@ public class AppUserService {
     }
 
     public AppUser updateUser(Long id, AppUser user){
-        Optional<AppUser> userOptional = userRepository.findById(id);
+        Optional<AppUser> userOptional = appUserRepository.findById(id);
         if(userOptional.isEmpty()){
             return null;
         }
@@ -48,10 +48,10 @@ public class AppUserService {
         userOptional.get().setName(user.getName());
         userOptional.get().setEmail(user.getEmail());
         userOptional.get().setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(userOptional.get());
+        return appUserRepository.save(userOptional.get());
     }
 
     public void deleteUser(Long id){
-        userRepository.deleteById(id);
+        appUserRepository.deleteById(id);
     }
 }

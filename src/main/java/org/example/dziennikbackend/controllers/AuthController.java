@@ -4,7 +4,6 @@ import org.example.dziennikbackend.configs.JwtUtil;
 import org.example.dziennikbackend.models.DTOs.AuthDTO;
 import org.example.dziennikbackend.models.DTOs.JwtTokenDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
-import org.example.dziennikbackend.repositories.UserRepository;
 import org.example.dziennikbackend.services.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

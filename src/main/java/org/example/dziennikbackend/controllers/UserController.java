@@ -1,14 +1,12 @@
 package org.example.dziennikbackend.controllers;
 
 import org.example.dziennikbackend.models.Entities.AppUser;
-import org.example.dziennikbackend.repositories.UserRepository;
 import org.example.dziennikbackend.services.AppUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/private/users")
