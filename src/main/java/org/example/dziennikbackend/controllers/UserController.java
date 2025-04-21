@@ -45,7 +45,8 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<AppUser> updateUser(@RequestBody AppUser user) {
-        return ResponseEntity.ok(appUserService.createUser(user));
+        Long id = appUserService.getUserIdByLogin(user.getLogin());
+        return ResponseEntity.ok(appUserService.updateUser(id,user));
     }
 
     @DeleteMapping

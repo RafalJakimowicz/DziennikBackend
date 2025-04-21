@@ -13,6 +13,8 @@ public class Major {
     @GeneratedValue
     private Long id;
     private String name;
+
+    @Column(unique = true)
     private String shortName;
 
     @JsonIgnore

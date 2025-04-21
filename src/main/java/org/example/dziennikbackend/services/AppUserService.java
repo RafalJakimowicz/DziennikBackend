@@ -30,6 +30,14 @@ public class AppUserService {
         return userRepository.save(user);
     }
 
+    public Long getUserIdByLogin(String login){
+        Optional<AppUser> user = userRepository.findByLogin(login);
+        if(user.isEmpty()){
+            return null;
+        }
+        return user.get().getId();
+    }
+
     public AppUser updateUser(Long id, AppUser user){
         Optional<AppUser> userOptional = userRepository.findById(id);
         if(userOptional.isEmpty()){
