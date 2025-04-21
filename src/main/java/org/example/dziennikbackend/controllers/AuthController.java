@@ -4,6 +4,7 @@ import org.example.dziennikbackend.configs.JwtUtil;
 import org.example.dziennikbackend.models.DTOs.AuthDTO;
 import org.example.dziennikbackend.models.DTOs.JwtTokenDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
+import org.example.dziennikbackend.repositories.UserRepository;
 import org.example.dziennikbackend.services.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthService authService;
     private final JwtUtil jwtUtil;
+
     public AuthController(AuthService authService, JwtUtil jwtUtil) {
         this.authService = authService;
         this.jwtUtil = jwtUtil;
@@ -43,5 +45,15 @@ public class AuthController {
     public ResponseEntity<JwtTokenDTO> logoutUser (@RequestBody JwtTokenDTO token){
         jwtUtil.revokeToken(token.getToken());
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/me")
+    public ResponseEntity<AppUser> getUser (@RequestBody JwtTokenDTO token){
+        AppUser user = authService.getUserByLogin(token);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }

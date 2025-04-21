@@ -1,6 +1,8 @@
 package org.example.dziennikbackend.services;
 
+import org.example.dziennikbackend.configs.JwtUtil;
 import org.example.dziennikbackend.models.DTOs.AuthDTO;
+import org.example.dziennikbackend.models.DTOs.JwtTokenDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
 import org.example.dziennikbackend.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,10 +14,12 @@ import java.util.Optional;
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     public AppUser validateCredentials(AuthDTO authDTO) {
@@ -39,5 +43,15 @@ public class AuthService {
         newUser = Optional.of(userRepository.save(user));
         newUser.get().setPassword(null);
         return newUser.get();
+    }
+
+    public AppUser getUserByLogin(JwtTokenDTO token){
+        String username = jwtUtil.extractUsernameFromToken(token.getToken());
+        Optional<AppUser> user = userRepository.findByLogin(username);
+        if (user.isEmpty()) {
+            return null;
+        }
+        user.get().setPassword(null);
+        return user.get();
     }
 }
