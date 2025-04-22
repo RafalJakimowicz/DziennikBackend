@@ -1,5 +1,6 @@
 package org.example.dziennikbackend.controllers;
 
+import org.example.dziennikbackend.models.DTOs.PasswordsDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
 import org.example.dziennikbackend.services.AppUserService;
 import org.springframework.http.HttpStatus;
@@ -41,15 +42,27 @@ public class AppUserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(appUserService.createUser(user));
     }
 
-    @PutMapping
-    public ResponseEntity<AppUser> updateUser(@RequestBody AppUser user) {
-        Long id = appUserService.getUserIdByLogin(user.getLogin());
-        return ResponseEntity.ok(appUserService.updateUser(id,user));
+    @PutMapping("/{id}")
+    public ResponseEntity<AppUser> updateUser(@PathVariable Long id,@RequestBody AppUser user) {
+        AppUser updatedUser = appUserService.updateUser(id, user);
+        if(updatedUser == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping
-    public ResponseEntity deleteUser(@RequestBody AppUser user) {
-        appUserService.deleteUser(user.getId());
+    @PutMapping("/{id}/password")
+    public ResponseEntity<AppUser> updateUserPassword(@PathVariable Long id, @RequestBody PasswordsDTO upDTO) {
+        AppUser user = appUserService.updatePassword(id, upDTO.getOldPassword(), upDTO.getNewPassword());
+        if(user == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUser(@PathVariable Long id) {
+        appUserService.deleteUser(id);
         return ResponseEntity.ok().build();
     }
 }

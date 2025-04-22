@@ -1,5 +1,6 @@
 package org.example.dziennikbackend.services;
 
+import jakarta.transaction.Transactional;
 import org.example.dziennikbackend.models.Entities.AppUser;
 import org.example.dziennikbackend.repositories.AppUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,16 +19,27 @@ public class AppUserService {
     }
 
     public List<AppUser> getAllUsers(){
-        return appUserRepository.findAll();
+        List<AppUser> users =  appUserRepository.findAll();
+        for (AppUser user : users) {
+            user.setPassword(null);
+        }
+        return users;
     }
 
     public AppUser getUserById(Long id){
         Optional<AppUser> user = appUserRepository.findById(id);
-        return user.orElse(null);
+        AppUser appUser = user.orElse(null);
+        if(appUser == null){
+            return null;
+        }
+        appUser.setPassword(null);
+        return appUser;
     }
 
     public AppUser createUser(AppUser user){
-        return appUserRepository.save(user);
+        AppUser appUser = appUserRepository.save(user);
+        appUser.setPassword(null);
+        return appUser;
     }
 
     public Long getUserIdByLogin(String login){
@@ -38,17 +50,40 @@ public class AppUserService {
         return user.get().getId();
     }
 
+    @Transactional
     public AppUser updateUser(Long id, AppUser user){
         Optional<AppUser> userOptional = appUserRepository.findById(id);
         if(userOptional.isEmpty()){
             return null;
         }
-        userOptional.get().setSurname(user.getSurname());
-        userOptional.get().setLogin(user.getLogin());
-        userOptional.get().setName(user.getName());
-        userOptional.get().setEmail(user.getEmail());
-        userOptional.get().setPassword(passwordEncoder.encode(user.getPassword()));
-        return appUserRepository.save(userOptional.get());
+        if (user.getLogin() != null) {
+            userOptional.get().setLogin(user.getLogin());
+        } else if (user.getName() != null) {
+            userOptional.get().setName(user.getName());
+        } else if (user.getEmail() != null) {
+            userOptional.get().setEmail(user.getEmail());
+        } else if (user.getSurname() != null) {
+            userOptional.get().setSurname(user.getSurname());
+        }
+        AppUser savedUser = appUserRepository.save(userOptional.get());
+        savedUser.setPassword(null);
+        return savedUser;
+    }
+
+    @Transactional
+    public AppUser updatePassword(Long id, String oldPassword, String newPassword){
+        if (oldPassword == null || passwordEncoder.matches(newPassword, oldPassword) || newPassword == null){
+            return null;
+        }
+        Optional<AppUser> userOptional = appUserRepository.findById(id);
+        if(userOptional.isEmpty()){
+            return null;
+        }
+        AppUser user = userOptional.get();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        AppUser updatedUser = appUserRepository.save(user);
+        updatedUser.setPassword(null);
+        return updatedUser;
     }
 
     public void deleteUser(Long id){
