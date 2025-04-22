@@ -43,7 +43,7 @@ public class AppUserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AppUser> updateUser(@PathVariable Long id,@RequestBody AppUser user) {
+    public ResponseEntity<AppUser> updateUser(@PathVariable Long id, @RequestBody AppUser user) {
         AppUser updatedUser = appUserService.updateUser(id, user);
         if(updatedUser == null){
             return ResponseEntity.notFound().build();

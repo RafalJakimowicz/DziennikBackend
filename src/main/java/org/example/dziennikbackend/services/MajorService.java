@@ -1,5 +1,6 @@
 package org.example.dziennikbackend.services;
 
+import jakarta.transaction.Transactional;
 import org.example.dziennikbackend.models.Entities.Major;
 import org.example.dziennikbackend.repositories.MajorRepository;
 import org.springframework.stereotype.Service;
@@ -15,22 +16,26 @@ public class MajorService {
         this.majorRepository = majorRepository;
     }
 
+    @Transactional
     public List<Major> getAllMajors() {
         return majorRepository.findAll();
     }
 
+    @Transactional
     public Major getMajorById(Long id) {
         Optional<Major> major = majorRepository.findById(id);
         return major.orElse(null);
     }
 
+    @Transactional
     public Major createMajor(Major major) {
-        if (majorRepository.existsById(major.getId()) || major.getShortName() == null) {
+        if (majorRepository.existsByShortName(major.getShortName()) || major.getShortName() == null) {
             return null;
         }
         return majorRepository.save(major);
     }
 
+    @Transactional
     public Major updateMajor(Long id, Major major) {
         Optional<Major> majorOptional = majorRepository.findById(id);
         if (majorOptional.isPresent()) {

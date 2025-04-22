@@ -16,27 +16,31 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
+    @Transactional
     public Student createStudent(Student student) {
         return studentRepository.save(student);
     }
 
     @Transactional
     public Student updateStudentStatus(Student student, StudentStatus status) {
-        int affected_rows = studentRepository.updateStudentStatus(student.getAlbum_number(), status);
+        int affected_rows = studentRepository.updateStudentStatus(student.getAlbumNumber(), status);
         if (affected_rows == 0) {
             return null;
         }
-        return studentRepository.findByAlbum_number(student.getAlbum_number()).get();
+        return studentRepository.findByAlbum_number(student.getAlbumNumber()).get();
     }
 
+    @Transactional
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
 
+    @Transactional
     public List<Student> getAllStudentsByMajor(Major major) {
         return studentRepository.findByMajor(major);
     }
 
+    @Transactional
     public Student updateStudentMajor(Major major, Student student) {
         if (!student.getMajor().equals(major)) {
             major.removeStudent(student);

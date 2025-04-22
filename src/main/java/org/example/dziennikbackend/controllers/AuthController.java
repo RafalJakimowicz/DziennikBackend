@@ -24,7 +24,7 @@ public class AuthController {
     public ResponseEntity<JwtTokenDTO> registerUser(@RequestBody AppUser _user) {
         AppUser appUser = authService.registerUser(_user);
         if (appUser == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         String token = jwtUtil.generateToken(new AuthDTO(_user.getLogin(), _user.getPassword()), 24);
         return new ResponseEntity<>(new JwtTokenDTO(token), HttpStatus.CREATED);
@@ -34,7 +34,7 @@ public class AuthController {
     public ResponseEntity<JwtTokenDTO> loginUser(@RequestBody AuthDTO _user) {
         AppUser user = authService.validateCredentials(_user);
         if (user == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         String token = jwtUtil.generateToken(_user, 24);
         return new ResponseEntity<>(new JwtTokenDTO(token), HttpStatus.OK);

@@ -1,5 +1,6 @@
 package org.example.dziennikbackend.services;
 
+import jakarta.transaction.Transactional;
 import org.example.dziennikbackend.configs.JwtUtil;
 import org.example.dziennikbackend.models.DTOs.AuthDTO;
 import org.example.dziennikbackend.models.DTOs.JwtTokenDTO;
@@ -22,6 +23,7 @@ public class AuthService {
         this.jwtUtil = jwtUtil;
     }
 
+    @Transactional
     public AppUser validateCredentials(AuthDTO authDTO) {
         Optional<AppUser> user = appUserRepository.findByLogin(authDTO.getLogin());
         if (user.isEmpty()) {
@@ -34,6 +36,7 @@ public class AuthService {
         return user.get();
     }
 
+    @Transactional
     public AppUser registerUser(AppUser user){
         Optional<AppUser> newUser = appUserRepository.findByLogin(user.getLogin());
         if (newUser.isPresent()) {
@@ -45,6 +48,7 @@ public class AuthService {
         return newUser.get();
     }
 
+    @Transactional
     public AppUser getUserByLogin(JwtTokenDTO token){
         String username = jwtUtil.extractUsernameFromToken(token.getToken());
         Optional<AppUser> user = appUserRepository.findByLogin(username);

@@ -18,6 +18,7 @@ public class AppUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public List<AppUser> getAllUsers(){
         List<AppUser> users =  appUserRepository.findAll();
         for (AppUser user : users) {
@@ -26,6 +27,7 @@ public class AppUserService {
         return users;
     }
 
+    @Transactional
     public AppUser getUserById(Long id){
         Optional<AppUser> user = appUserRepository.findById(id);
         AppUser appUser = user.orElse(null);
@@ -36,18 +38,11 @@ public class AppUserService {
         return appUser;
     }
 
+    @Transactional
     public AppUser createUser(AppUser user){
         AppUser appUser = appUserRepository.save(user);
         appUser.setPassword(null);
         return appUser;
-    }
-
-    public Long getUserIdByLogin(String login){
-        Optional<AppUser> user = appUserRepository.findByLogin(login);
-        if(user.isEmpty()){
-            return null;
-        }
-        return user.get().getId();
     }
 
     @Transactional
@@ -86,6 +81,7 @@ public class AppUserService {
         return updatedUser;
     }
 
+    @Transactional
     public void deleteUser(Long id){
         appUserRepository.deleteById(id);
     }
