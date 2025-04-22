@@ -41,6 +41,10 @@ public class Major {
         this.shortName = shortName;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public List<Semester> getSemesters() {
         return this.semesters;
     }
