@@ -43,6 +43,10 @@ public class Semester {
         this.major = major;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void removeCourseEdition(CourseEdition edition){
         this.courseEditions.add(edition);
         edition.setSemester(this);
