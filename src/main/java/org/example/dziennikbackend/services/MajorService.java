@@ -22,8 +22,8 @@ public class MajorService {
     }
 
     @Transactional
-    public Major getMajorById(Long id) {
-        Optional<Major> major = majorRepository.findById(id);
+    public Major getMajorByShortName(String shortName) {
+        Optional<Major> major = majorRepository.findByShortName(shortName);
         return major.orElse(null);
     }
 
@@ -36,22 +36,22 @@ public class MajorService {
     }
 
     @Transactional
-    public Major updateMajor(Long id, Major major) {
-        Optional<Major> majorOptional = majorRepository.findById(id);
+    public Major updateMajor(String shortName, Major major) {
+        Optional<Major> majorOptional = majorRepository.findByShortName(shortName);
         if (majorOptional.isPresent()) {
             if(major.getName().isEmpty() || !major.getName().equals(majorOptional.get().getName())) {
                 major.setName(majorOptional.get().getName());
             } else if (major.getShortName() == null || !major.getShortName().equals(majorOptional.get().getShortName())) {
                 major.setShortName(majorOptional.get().getShortName());
             }
-            major.setId(id);
+            major.setId(majorOptional.get().getId());
             return majorRepository.save(major);
         } else {
             return null;
         }
     }
 
-    public void deleteMajor(Long id) {
-        majorRepository.deleteById(id);
+    public void deleteMajor(String shortName) {
+        majorRepository.deleteByShortName(shortName);
     }
 }

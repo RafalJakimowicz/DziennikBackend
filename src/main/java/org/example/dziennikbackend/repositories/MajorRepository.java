@@ -11,4 +11,5 @@ public interface MajorRepository extends JpaRepository<Major, Long> {
     Optional<Major> findByShortName(String shortName);
     Optional<Major> findByName(String name);
     boolean existsByShortName(String shortName);
+    void deleteByShortName(String shortName);
 }

@@ -24,9 +24,9 @@ public class MajorController {
         return ResponseEntity.ok(majors);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Major> getMajorById(@PathVariable Long id) {
-        Major major = majorService.getMajorById(id);
+    @GetMapping("/{shortName}")
+    public ResponseEntity<Major> getMajorById(@PathVariable String shortName) {
+        Major major = majorService.getMajorByShortName(shortName);
         if (major == null) {
             return ResponseEntity.notFound().build();
         }
@@ -42,18 +42,18 @@ public class MajorController {
         return ResponseEntity.ok(newMajor);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Major> updateMajor(@PathVariable Long id, @RequestBody Major major) {
-        Major updatedMajor = majorService.updateMajor(id, major);
+    @PutMapping("/{shortName}")
+    public ResponseEntity<Major> updateMajor(@PathVariable String shortName, @RequestBody Major major) {
+        Major updatedMajor = majorService.updateMajor(shortName, major);
         if (updatedMajor == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedMajor);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Major> deleteMajor(@PathVariable Long id) {
-        majorService.deleteMajor(id);
+    @DeleteMapping("/{shortName}")
+    public ResponseEntity<Major> deleteMajor(@PathVariable String shortName) {
+        majorService.deleteMajor(shortName);
         return ResponseEntity.noContent().build();
     }
 }
