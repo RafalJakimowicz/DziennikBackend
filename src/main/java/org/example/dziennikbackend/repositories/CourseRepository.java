@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface CourseRepository extends JpaRepository<Course, Long> {
     Optional<Course> findByCode(String code);
     Optional<Course> findByName(String name);
+    void deleteByCode(String code);
 }
