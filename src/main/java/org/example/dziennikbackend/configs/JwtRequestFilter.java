@@ -17,8 +17,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-    @Autowired private JwtUtil jwtUtil;
-    @Autowired private UserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
+    private final UserDetailsService userDetailsService;
+
+    public JwtRequestFilter(JwtUtil jwtUtil,
+                            UserDetailsService userDetailsService) {
+        this.jwtUtil = jwtUtil;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -31,15 +37,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 username = jwtUtil.extractUsernameFromToken(jwt);
             } catch (ExpiredJwtException e){
                 logger.info("Token wygasł" + e.getMessage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (jwtUtil.validateToken(jwt, new AuthDTO(username, ""))){
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            try {
+                if (jwtUtil.validateToken(jwt, new AuthDTO(username, ""))){
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
 

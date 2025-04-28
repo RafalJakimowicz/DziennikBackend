@@ -27,7 +27,7 @@ public class StudentService {
         if (affected_rows == 0) {
             return null;
         }
-        return studentRepository.findByAlbum_number(student.getAlbumNumber()).get();
+        return studentRepository.findByAlbumNumber(student.getAlbumNumber()).get();
     }
 
     @Transactional

@@ -19,10 +19,10 @@ public class Lesson {
     private Group group;
 
     @Column(nullable = false)
-    private LocalDateTime start;
+    private LocalDateTime start_date;
 
     @Column(nullable = false)
-    private LocalDateTime end;
+    private LocalDateTime end_date;
 
     private String subject;
 
@@ -38,10 +38,10 @@ public class Lesson {
     private List<Attendance> attendances = new ArrayList<>();
 
     public Lesson() {}
-    public Lesson(Group group, LocalDateTime start, LocalDateTime end, String subject, String room){
+    public Lesson(Group group, LocalDateTime start_date, LocalDateTime end_date, String subject, String room){
         this.group = group;
-        this.start = start;
-        this.end = end;
+        this.start_date = start_date;
+        this.end_date = end_date;
         this.subject = subject;
         this.room = room;
     }
@@ -77,19 +77,19 @@ public class Lesson {
     }
 
     public LocalDateTime getStart(){
-        return this.start;
+        return this.start_date;
     }
 
-    public void setStart(LocalDateTime start){
-        this.start = start;
+    public void setStart(LocalDateTime start_date){
+        this.start_date = start_date;
     }
 
     public LocalDateTime getEnd(){
-        return this.end;
+        return this.end_date;
     }
 
-    public void setEnd(LocalDateTime end){
-        this.end = end;
+    public void setEnd(LocalDateTime end_date){
+        this.end_date = end_date;
     }
 
     public String getSubject(){

@@ -1,10 +1,13 @@
 package org.example.dziennikbackend.configs;
 
-import jakarta.persistence.SecondaryTable;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.example.dziennikbackend.models.DTOs.AuthDTO;
 import org.springframework.stereotype.Component;
-import io.jsonwebtoken.*;
 
+import javax.crypto.SecretKey;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
@@ -12,15 +15,29 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 @Component
-public class JwtUtil{
-    private final String TOKEN_KEY = "hv56X@GN_?EFP%TO^*+=d*Lgoj673D-l";
+public class JwtUtil {
 
-    //in memory blacklisted tokens
+    // ⚠️  For HS256 the *raw* key must be ≥ 256 bits (32 bytes). Replace this with a stronger value in prod.
+    private static final String TOKEN_KEY_B64 = "DJO/77tngZzQpeC4VKMWpxJ7tfN3Mb87tiRgC5Z8Q7o=";   // demo only (“haslo123”)
+
+    /* ---------- helpers -------------------------------------------------- */
+
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(TOKEN_KEY_B64);   // use jjwt-provided Decoders
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
     private final Set<String> revokedJti = ConcurrentHashMap.newKeySet();
 
-    public <T> T extractDataFromToken(String token, Function<Claims, T> claimsResolver) {
-        Claims claims = Jwts.parser().setSigningKey(TOKEN_KEY).parseClaimsJws(token).getBody();
-        return claimsResolver.apply(claims);
+    /* ---------- claim extraction ----------------------------------------- */
+
+    public <T> T extractDataFromToken(String token, Function<Claims,T> resolver) {
+        Claims claims = Jwts.parserBuilder()                       // new API
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return resolver.apply(claims);
     }
 
     public String extractUsernameFromToken(String token) {
@@ -31,32 +48,42 @@ public class JwtUtil{
         return extractDataFromToken(token, Claims::getExpiration);
     }
 
-    private Boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(String token) {
         return extractExpirationDateFromToken(token).before(new Date());
     }
 
-    public String generateToken(AuthDTO user, int expirationHours){
-        String jti = UUID.randomUUID().toString();
-        return Jwts.builder().setId(jti)
+    /* ---------- generation ------------------------------------------------ */
+
+    public String generateToken(AuthDTO user, int expirationHours) {
+        String jti   = UUID.randomUUID().toString();
+        Date   now   = new Date();
+        Date   until = new Date(now.getTime() + expirationHours * 3_600_000L);
+
+        return Jwts.builder()
+                .setId(jti)
                 .setSubject(user.getLogin())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60*expirationHours))
-                .signWith(SignatureAlgorithm.HS512, TOKEN_KEY).compact();
+                .setIssuedAt(now)
+                .setExpiration(until)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)   // <-- key first, alg second
+                .compact();
     }
 
-    public Boolean validateToken(String token, AuthDTO user) {
-        final String username = this.extractUsernameFromToken(token);
-        return (username.equals(user.getLogin()) && !isTokenExpired(token) && !isTokenRevoked(token));
+    /* ---------- validation / revocation ---------------------------------- */
+
+    public boolean validateToken(String token, AuthDTO user) {
+        String username = extractUsernameFromToken(token);
+        return username.equals(user.getLogin())
+                && !isTokenExpired(token)
+                && !isTokenRevoked(token);
     }
 
-    private Boolean isTokenRevoked(String token) {
-        String jti = this.extractDataFromToken(token, Claims::getId);
+    private boolean isTokenRevoked(String token) {
+        String jti = extractDataFromToken(token, Claims::getId);
         return revokedJti.contains(jti);
     }
 
     public void revokeToken(String token) {
-        String jti = this.extractDataFromToken(token, Claims::getId);
+        String jti = extractDataFromToken(token, Claims::getId);
         revokedJti.add(jti);
     }
-
 }

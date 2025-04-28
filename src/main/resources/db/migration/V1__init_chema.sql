@@ -21,8 +21,8 @@ CREATE TABLE users (
 CREATE TABLE semesters (
     id  BIGSERIAL  PRIMARY KEY,
     code  VARCHAR(255),
-    start  TIMESTAMP  NOT NULL,
-    end  TIMESTAMP  NOT NULL,
+    start_date  TIMESTAMP  NOT NULL,
+    end_date  TIMESTAMP  NOT NULL,
     major_id  BIGINT  REFERENCES majors(id)
 );
 
@@ -74,8 +74,8 @@ CREATE TABLE groups (
 CREATE TABLE lessons (
     id  BIGSERIAL  PRIMARY KEY,
     group_id  BIGINT  REFERENCES groups(id),
-    start  TIMESTAMP  NOT NULL,
-    end  TIMESTAMP  NOT NULL,
+    start_date  TIMESTAMP  NOT NULL,
+    end_date  TIMESTAMP  NOT NULL,
     subject  VARCHAR(255),
     room  VARCHAR(255)
 );
@@ -85,7 +85,7 @@ CREATE TABLE attendances (
     id  BIGSERIAL  PRIMARY KEY,
     lesson_id  BIGINT  REFERENCES lessons(id),
     student_id BIGINT  REFERENCES students(id),
-    status  VARCHAR(20)  NOT NULL DEFAULT 'NIEOBECNY',
+    status  VARCHAR(20),
     user_id  BIGINT  REFERENCES users(id),
     date  TIMESTAMP  NOT NULL
 );

@@ -15,12 +15,12 @@ import java.util.Optional;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    Optional<Student> findByAlbum_number(Integer album_number);
+    Optional<Student> findByAlbumNumber(Integer albumNumber);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Student s SET s.studentStatus = :studentStatus WHERE s.album_number = :album_number")
-    int updateStudentStatus(@Param("album_number") Integer album_number, @Param("studentStatus") StudentStatus studentStatus);
+    @Query("UPDATE Student AS s SET s.studentStatus = :studentStatus WHERE s.albumNumber = :albumNumber")
+    int updateStudentStatus(@Param("albumNumber") Integer albumNumber, @Param("studentStatus") StudentStatus studentStatus);
 
     List<Student> findByMajor(Major major);
 }

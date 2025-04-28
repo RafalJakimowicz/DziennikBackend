@@ -21,7 +21,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<JwtTokenDTO> registerUser(@RequestBody AppUser _user) {
+    public ResponseEntity<JwtTokenDTO> registerUser(@RequestBody AppUser _user) throws Exception {
         AppUser appUser = authService.registerUser(_user);
         if (appUser == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -31,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtTokenDTO> loginUser(@RequestBody AuthDTO _user) {
+    public ResponseEntity<JwtTokenDTO> loginUser(@RequestBody AuthDTO _user) throws Exception {
         AppUser user = authService.validateCredentials(_user);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -41,13 +41,13 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<JwtTokenDTO> logoutUser (@RequestBody JwtTokenDTO token){
+    public ResponseEntity<JwtTokenDTO> logoutUser (@RequestBody JwtTokenDTO token) throws Exception {
         jwtUtil.revokeToken(token.getToken());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/me")
-    public ResponseEntity<AppUser> getUser (@RequestBody JwtTokenDTO token){
+    public ResponseEntity<AppUser> getUser (@RequestBody JwtTokenDTO token) throws Exception {
         AppUser user = authService.getUserByLogin(token);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

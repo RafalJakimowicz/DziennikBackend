@@ -3,6 +3,7 @@ package org.example.dziennikbackend.models.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.example.dziennikbackend.models.Enums.StudentStatus;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class Student {
     private String name;
     private String surname;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, name = "album_number")
     private Integer albumNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,7 +29,8 @@ public class Student {
     private Integer year;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'AKTYWNY'")
+    @Column(nullable = false)
+    @ColumnDefault("'NIEOBECNY'")
     private StudentStatus studentStatus;
 
     @OneToMany(

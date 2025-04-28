@@ -32,7 +32,6 @@ public class AuthService {
         if (!passwordEncoder.matches(authDTO.getPassword(), user.get().getPassword())){
             return null;
         }
-        user.get().setPassword(null);
         return user.get();
     }
 
@@ -44,18 +43,16 @@ public class AuthService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         newUser = Optional.of(appUserRepository.save(user));
-        newUser.get().setPassword(null);
         return newUser.get();
     }
 
     @Transactional
-    public AppUser getUserByLogin(JwtTokenDTO token){
+    public AppUser getUserByLogin(JwtTokenDTO token) throws Exception {
         String username = jwtUtil.extractUsernameFromToken(token.getToken());
         Optional<AppUser> user = appUserRepository.findByLogin(username);
         if (user.isEmpty()) {
             return null;
         }
-        user.get().setPassword(null);
         return user.get();
     }
 }

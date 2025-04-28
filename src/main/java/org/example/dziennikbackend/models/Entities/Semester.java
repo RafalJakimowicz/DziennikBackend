@@ -17,10 +17,10 @@ public class Semester {
     private String code;
 
     @Column(nullable = false)
-    private LocalDateTime start;
+    private LocalDateTime start_date;
 
     @Column(nullable = false)
-    private LocalDateTime end;
+    private LocalDateTime end_date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "major_id")
@@ -36,10 +36,10 @@ public class Semester {
     private List<CourseEdition> courseEditions = new ArrayList<>();
 
     public Semester() {}
-    public Semester(String code, LocalDateTime start, LocalDateTime end, Major major) {
+    public Semester(String code, LocalDateTime start_date, LocalDateTime end_date, Major major) {
         this.code = code;
-        this.start = start;
-        this.end = end;
+        this.start_date = start_date;
+        this.end_date = end_date;
         this.major = major;
     }
 
@@ -78,19 +78,19 @@ public class Semester {
     }
 
     public LocalDateTime getStart() {
-        return this.start;
+        return this.start_date;
     }
 
-    public void setStart(LocalDateTime start) {
-        this.start = start;
+    public void setStart(LocalDateTime start_date) {
+        this.start_date = start_date;
     }
 
     public LocalDateTime getEnd() {
-        return this.end;
+        return this.end_date;
     }
 
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
+    public void setEnd(LocalDateTime end_date) {
+        this.end_date = end_date;
     }
 
     public Major getMajor() {
