@@ -1,5 +1,6 @@
 package org.example.dziennikbackend.controllers;
 
+import org.example.dziennikbackend.models.DTOs.SemesterDTO;
 import org.example.dziennikbackend.models.Entities.Semester;
 import org.example.dziennikbackend.services.SemesterService;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class SemesterController {
     }
 
     @PostMapping
-    public ResponseEntity<Semester> createSemester(@RequestBody Semester semester) {
+    public ResponseEntity<Semester> createSemester(@RequestBody SemesterDTO semester) {
         Semester createdSemester = semesterService.createSemester(semester);
         if (createdSemester == null) {
             return ResponseEntity.notFound().build();
@@ -43,7 +44,7 @@ public class SemesterController {
     }
 
     @PutMapping("/{code}")
-    public ResponseEntity<Semester> updateSemester(@PathVariable String code, @RequestBody Semester semester) {
+    public ResponseEntity<Semester> updateSemester(@PathVariable String code, @RequestBody SemesterDTO semester) {
         Semester returnedSemester = semesterService.updateSemester(semester);
         if (returnedSemester == null) {
             return ResponseEntity.notFound().build();

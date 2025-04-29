@@ -1,7 +1,9 @@
 package org.example.dziennikbackend.services;
 
 import jakarta.transaction.Transactional;
+import org.example.dziennikbackend.models.DTOs.SemesterDTO;
 import org.example.dziennikbackend.models.Entities.Semester;
+import org.example.dziennikbackend.repositories.MajorRepository;
 import org.example.dziennikbackend.repositories.SemesterRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,16 +13,23 @@ import java.util.Optional;
 @Service
 public class SemesterService {
     private final SemesterRepository semesterRepository;
-    public SemesterService(SemesterRepository semesterRepository) {
+    private final MajorRepository majorRepository;
+    public SemesterService(SemesterRepository semesterRepository, MajorRepository majorRepository) {
         this.semesterRepository = semesterRepository;
+        this.majorRepository = majorRepository;
     }
 
     @Transactional
-    public Semester createSemester(Semester semester) {
+    public Semester createSemester(SemesterDTO semester) {
         if (semesterRepository.existsSemestersByCode(semester.getCode())) {
             return null;
         }
-        return semesterRepository.save(semester);
+        Semester newSemester = new Semester();
+        newSemester.setCode(semester.getCode());
+        newSemester.setStart(semester.getStartDate());
+        newSemester.setEnd(semester.getEndDate());
+        newSemester.setMajor(majorRepository.getReferenceById(semester.getMajorId()));
+        return semesterRepository.save(newSemester);
     }
 
     @Transactional
@@ -47,23 +56,23 @@ public class SemesterService {
     }
 
     @Transactional
-    public Semester updateSemester(Semester semester) {
+    public Semester updateSemester(SemesterDTO semester) {
         Optional<Semester> oldSemester = semesterRepository.findSemestersByCode(semester.getCode());
         if (oldSemester.isPresent()){
-            if(semester.getCode() == null){
-                semester.setCode(oldSemester.get().getCode());
+            Semester semesterToUpdate = oldSemester.get();
+            if(semester.getCode() != null){
+                semesterToUpdate.setCode(semester.getCode());
             }
-            else if (semester.getStart() == null){
-                semester.setStart(oldSemester.get().getStart());
+            else if (semester.getStartDate() != null){
+                semesterToUpdate.setStart(semester.getStartDate());
             }
-            else if (semester.getEnd() == null){
-                semester.setEnd(oldSemester.get().getEnd());
+            else if (semester.getEndDate() != null){
+                semesterToUpdate.setEnd(semester.getEndDate());
             }
-            else if (semester.getMajor() == null){
-                semester.setMajor(oldSemester.get().getMajor());
+            else if (semester.getMajorId() != null){
+                semesterToUpdate.setMajor(majorRepository.getReferenceById(semester.getMajorId()));
             }
-            semester.setId(oldSemester.get().getId());
-            return semesterRepository.save(semester);
+            return semesterRepository.save(semesterToUpdate);
         }
         else {
             return null;

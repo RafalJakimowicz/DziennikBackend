@@ -3,6 +3,7 @@ package org.example.dziennikbackend.models.Entities;
 import jakarta.persistence.*;
 import org.example.dziennikbackend.models.Enums.AttendanceStatus;
 import org.example.dziennikbackend.models.Enums.StudentStatus;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +23,8 @@ public class Attendance {
     private Student student;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'NIEOBECNY'")
+    @Column(nullable = false, length = 20)
+    @ColumnDefault("'NIEOBECNY'")
     private AttendanceStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
