@@ -7,6 +7,7 @@ import org.example.dziennikbackend.models.DTOs.AuthDTO;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Set;
@@ -17,12 +18,18 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    // ⚠️  For HS256 the *raw* key must be ≥ 256 bits (32 bytes). Replace this with a stronger value in prod.
-    private static final String TOKEN_KEY_B64 = "DJO/77tngZzQpeC4VKMWpxJ7tfN3Mb87tiRgC5Z8Q7o=";   // demo only (“haslo123”)
-
     /* ---------- helpers -------------------------------------------------- */
 
-    private SecretKey getSigningKey() {
+    private SecretKey getSigningKey(){
+        String TOKEN_KEY_B64;
+        try{
+            ConfigService cs = new ConfigService();
+            TOKEN_KEY_B64 = cs.getConfigObject().getTokenPassword();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        // ⚠️  For HS256 the *raw* key must be ≥ 256 bits (32 bytes). Replace this with a stronger value in prod.
+        // demo only (“haslo123”)
         byte[] keyBytes = Decoders.BASE64.decode(TOKEN_KEY_B64);   // use jjwt-provided Decoders
         return Keys.hmacShaKeyFor(keyBytes);
     }
