@@ -19,8 +19,11 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Student AS s SET s.studentStatus = :studentStatus WHERE s.albumNumber = :albumNumber")
+    @Query(value = "UPDATE Student AS s SET s.studentStatus = :studentStatus WHERE s.albumNumber = :albumNumber")
     int updateStudentStatus(@Param("albumNumber") Integer albumNumber, @Param("studentStatus") StudentStatus studentStatus);
 
     List<Student> findByMajor(Major major);
+
+    @Query(value = "SELECT s.* FROM students AS s JOIN students_in_groups AS sg ON s.id = sg.student_id WHERE sg.id = :groupId", nativeQuery = true)
+    List<Student> findStudentsInGroup(@Param ("groupId") Long groupId);
 }
