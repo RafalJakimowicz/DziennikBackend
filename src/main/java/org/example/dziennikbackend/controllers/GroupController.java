@@ -1,12 +1,13 @@
 package org.example.dziennikbackend.controllers;
 
+import org.example.dziennikbackend.models.DTOs.GroupDTO;
+import org.example.dziennikbackend.models.DTOs.StudentInGroupDTO;
 import org.example.dziennikbackend.models.Entities.Group;
+import org.example.dziennikbackend.models.Entities.Student;
+import org.example.dziennikbackend.models.Entities.StudentInGroup;
 import org.example.dziennikbackend.services.GroupService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,5 +31,50 @@ public class GroupController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(group);
+    }
+
+    @PostMapping
+    public ResponseEntity<Group> createGroup(@RequestBody GroupDTO group) {
+        Group groupCreated = groupService.createGroup(group);
+        if (groupCreated == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(groupCreated);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Group> updateGroup(@PathVariable Long id, @RequestBody GroupDTO group) {
+        Group groupUpdated = groupService.updateGroup(id, group);
+        if (groupUpdated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(groupUpdated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Group> deleteGroup(@PathVariable Long id) {
+        groupService.deleteGroup(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/students")
+    public ResponseEntity<List<Student>> getStudentsByGroup(@PathVariable Long id) {
+        List<Student> students = groupService.getStudentsInGroup(id);
+        if (students.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(students);
+    }
+
+    @PostMapping("/{id}/students")
+    public ResponseEntity<StudentInGroup> addStudentToGroup(@PathVariable Long id, @RequestBody StudentInGroupDTO studentInGroupDTO) {
+        StudentInGroup added = groupService.addStudentToGroup(studentInGroupDTO);
+        return ResponseEntity.ok(added);
+    }
+
+    @DeleteMapping("/{gId}/students/{sId}")
+    public ResponseEntity<Void> deleteStudentFromGroup(@PathVariable Long gId, @PathVariable Long sId) {
+        groupService.deleteStudentFromGroup(gId, sId);
+        return ResponseEntity.noContent().build();
     }
 }

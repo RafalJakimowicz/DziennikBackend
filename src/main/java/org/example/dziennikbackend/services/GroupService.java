@@ -89,7 +89,12 @@ public class GroupService {
     }
 
     @Transactional
-    public void deleteStudentFromGroup(Long studentInGroupId) {
-        studentInGroupRepository.deleteById(studentInGroupId);
+    public void deleteStudentFromGroup(Long sId, Long gId) {
+        List<StudentInGroup> sig = studentInGroupRepository.findAllByGroupId(gId);
+        for (StudentInGroup studentInGroup : sig) {
+            if (studentInGroup.getStudent().getId().equals(sId)) {
+                studentInGroupRepository.delete(studentInGroup);
+            }
+        }
     }
 }
