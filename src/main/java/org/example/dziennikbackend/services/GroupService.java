@@ -3,6 +3,7 @@ package org.example.dziennikbackend.services;
 import jakarta.transaction.Transactional;
 import org.example.dziennikbackend.models.DTOs.GroupDTO;
 import org.example.dziennikbackend.models.DTOs.StudentInGroupDTO;
+import org.example.dziennikbackend.models.Entities.Grade;
 import org.example.dziennikbackend.models.Entities.Group;
 import org.example.dziennikbackend.models.Entities.Student;
 import org.example.dziennikbackend.models.Entities.StudentInGroup;
@@ -19,17 +20,20 @@ public class GroupService {
     private final CoursePartRepository coursePartRepository;
     private final AppUserRepository appUserRepository;
     private final StudentRepository studentRepository;
+    private final GradeRepository gradeRepository;
 
     public GroupService(GroupRepository groupRepository,
                         StudentInGroupRepository studentInGroupRepository,
                         CoursePartRepository coursePartRepository,
                         AppUserRepository appUserRepository,
-                        StudentRepository studentRepository) {
+                        StudentRepository studentRepository,
+                        GradeRepository gradeRepository) {
         this.groupRepository = groupRepository;
         this.studentInGroupRepository = studentInGroupRepository;
         this.coursePartRepository = coursePartRepository;
         this.appUserRepository = appUserRepository;
         this.studentRepository = studentRepository;
+        this.gradeRepository = gradeRepository;
     }
 
     @Transactional
@@ -96,5 +100,11 @@ public class GroupService {
                 studentInGroupRepository.delete(studentInGroup);
             }
         }
+    }
+
+    @Transactional
+    public List<Grade> getGradesInGroup(Long groupId) {
+        List<Grade> grades = gradeRepository.getGradesByGroupId(groupId);
+        return grades;
     }
 }

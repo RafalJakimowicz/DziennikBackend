@@ -2,6 +2,7 @@ package org.example.dziennikbackend.controllers;
 
 import org.example.dziennikbackend.models.DTOs.GroupDTO;
 import org.example.dziennikbackend.models.DTOs.StudentInGroupDTO;
+import org.example.dziennikbackend.models.Entities.Grade;
 import org.example.dziennikbackend.models.Entities.Group;
 import org.example.dziennikbackend.models.Entities.Student;
 import org.example.dziennikbackend.models.Entities.StudentInGroup;
@@ -66,8 +67,8 @@ public class GroupController {
         return ResponseEntity.ok(students);
     }
 
-    @PostMapping("/{id}/students")
-    public ResponseEntity<StudentInGroup> addStudentToGroup(@PathVariable Long id, @RequestBody StudentInGroupDTO studentInGroupDTO) {
+    @PostMapping("/students")
+    public ResponseEntity<StudentInGroup> addStudentToGroup(@RequestBody StudentInGroupDTO studentInGroupDTO) {
         StudentInGroup added = groupService.addStudentToGroup(studentInGroupDTO);
         return ResponseEntity.ok(added);
     }
@@ -76,5 +77,10 @@ public class GroupController {
     public ResponseEntity<Void> deleteStudentFromGroup(@PathVariable Long gId, @PathVariable Long sId) {
         groupService.deleteStudentFromGroup(gId, sId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/grades")
+    public ResponseEntity<List<Grade>> getGradesByGroup(@PathVariable Long id) {
+        return ResponseEntity.ok(groupService.getGradesInGroup(id));
     }
 }
