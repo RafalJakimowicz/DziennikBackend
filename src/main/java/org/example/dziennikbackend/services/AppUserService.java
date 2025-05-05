@@ -53,11 +53,11 @@ public class AppUserService {
         }
         if (user.getLogin() != null) {
             userOptional.get().setLogin(user.getLogin());
-        } else if (user.getName() != null) {
+        } if (user.getName() != null) {
             userOptional.get().setName(user.getName());
-        } else if (user.getEmail() != null) {
+        } if (user.getEmail() != null) {
             userOptional.get().setEmail(user.getEmail());
-        } else if (user.getSurname() != null) {
+        } if (user.getSurname() != null) {
             userOptional.get().setSurname(user.getSurname());
         }
         AppUser savedUser = appUserRepository.save(userOptional.get());

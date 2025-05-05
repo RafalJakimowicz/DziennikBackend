@@ -55,10 +55,10 @@ public class CourseEditionService {
             if(courseEdition.getCourseId() != null) {
                 courseEditionToUpdate.setCourse(courseRepository.getReferenceById(courseEdition.getCourseId()));
             }
-            else if (courseEdition.getSemesterId() != null) {
+            if (courseEdition.getSemesterId() != null) {
                 courseEditionToUpdate.setSemester(semesterRepository.getReferenceById(courseEdition.getSemesterId()));
             }
-            else if (courseEdition.getUserId() != null) {
+            if (courseEdition.getUserId() != null) {
                 courseEditionToUpdate.setUser(appUserRepository.getReferenceById(courseEdition.getUserId()));
             }
             return courseEditionRepository.save(courseEditionToUpdate);

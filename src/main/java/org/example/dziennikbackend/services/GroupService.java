@@ -58,9 +58,9 @@ public class GroupService {
             Group groupToUpdate = groupOptional.get();
             if (group.getCoursePartId() != null) {
                 groupToUpdate.setCoursePart(coursePartRepository.getReferenceById(group.getCoursePartId()));
-            } else if (group.getCode() != null) {
+            } if (group.getCode() != null) {
                 groupToUpdate.setCode(group.getCode());
-            } else if (group.getUserId() != null) {
+            } if (group.getUserId() != null) {
                 groupToUpdate.setUser(appUserRepository.getReferenceById(group.getUserId()));
             }
             return groupRepository.save(groupToUpdate);

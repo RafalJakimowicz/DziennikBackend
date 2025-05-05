@@ -41,7 +41,7 @@ public class MajorService {
         if (majorOptional.isPresent()) {
             if(major.getName().isEmpty() || !major.getName().equals(majorOptional.get().getName())) {
                 major.setName(majorOptional.get().getName());
-            } else if (major.getShortName() == null || !major.getShortName().equals(majorOptional.get().getShortName())) {
+            } if (major.getShortName() == null || !major.getShortName().equals(majorOptional.get().getShortName())) {
                 major.setShortName(majorOptional.get().getShortName());
             }
             major.setId(majorOptional.get().getId());

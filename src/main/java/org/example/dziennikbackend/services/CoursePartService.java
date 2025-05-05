@@ -55,11 +55,11 @@ public class CoursePartService {
             CoursePart toUpdate = coursePart.get();
             if(coursePartDTO.getCourseEditionId() != null) {
                 toUpdate.setEdition(courseEditionRepository.getReferenceById(coursePartDTO.getCourseEditionId()));
-            } else if (coursePartDTO.getDescription() != null) {
+            } if (coursePartDTO.getDescription() != null) {
                 toUpdate.setDescription(coursePartDTO.getDescription());
-            } else if (coursePartDTO.getEts() != null) {
+            } if (coursePartDTO.getEts() != null) {
                 toUpdate.setEcts(coursePartDTO.getEts());
-            } else if (coursePartDTO.getType() != null) {
+            } if (coursePartDTO.getType() != null) {
                 toUpdate.setType(coursePartDTO.getType());
             }
             return coursePartRepository.save(toUpdate);

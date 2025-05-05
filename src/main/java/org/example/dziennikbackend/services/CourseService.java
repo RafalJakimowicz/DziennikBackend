@@ -45,10 +45,10 @@ public class CourseService {
             if(!course.getName().isBlank()){
                 courseOptional.get().setName(course.getName());
             }
-            else if (!course.getCode().isBlank()){
+            if (!course.getCode().isBlank()){
                 courseOptional.get().setCode(course.getCode());
             }
-            else if (course.getEts() != null){
+            if (course.getEts() != null){
                 courseOptional.get().setEts(course.getEts());
             }
             return courseRepository.save(courseOptional.get());

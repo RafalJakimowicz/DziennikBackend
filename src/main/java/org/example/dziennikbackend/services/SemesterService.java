@@ -63,13 +63,13 @@ public class SemesterService {
             if(semester.getCode() != null){
                 semesterToUpdate.setCode(semester.getCode());
             }
-            else if (semester.getStartDate() != null){
+            if (semester.getStartDate() != null){
                 semesterToUpdate.setStart(semester.getStartDate());
             }
-            else if (semester.getEndDate() != null){
+            if (semester.getEndDate() != null){
                 semesterToUpdate.setEnd(semester.getEndDate());
             }
-            else if (semester.getMajorId() != null){
+            if (semester.getMajorId() != null){
                 semesterToUpdate.setMajor(majorRepository.getReferenceById(semester.getMajorId()));
             }
             return semesterRepository.save(semesterToUpdate);
