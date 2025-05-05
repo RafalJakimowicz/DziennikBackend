@@ -3,6 +3,7 @@ package org.example.dziennikbackend.services;
 import jakarta.transaction.Transactional;
 import org.example.dziennikbackend.models.DTOs.AttendanceDTO;
 import org.example.dziennikbackend.models.Entities.Attendance;
+import org.example.dziennikbackend.models.Enums.AttendanceStatus;
 import org.example.dziennikbackend.repositories.AppUserRepository;
 import org.example.dziennikbackend.repositories.AttendanceRepository;
 import org.example.dziennikbackend.repositories.LessonRepository;
@@ -56,6 +57,18 @@ public class AttendanceService {
         } else {
             return null;
         }
+    }
+
+    @Transactional
+    public Attendance updateAttendanceStatus(Long id, AttendanceStatus status) {
+        Attendance toUpdate = attendanceRepository.findById(id).orElse(null);
+        if (toUpdate != null) {
+            if (status != null) {
+                toUpdate.setStatus(status);
+            }
+            return attendanceRepository.save(toUpdate);
+        }
+        return null;
     }
 
     @Transactional
