@@ -2,6 +2,7 @@ package org.example.dziennikbackend.services;
 
 import jakarta.transaction.Transactional;
 import org.example.dziennikbackend.models.DTOs.LessonDTO;
+import org.example.dziennikbackend.models.Entities.Attendance;
 import org.example.dziennikbackend.models.Entities.Lesson;
 import org.example.dziennikbackend.repositories.AttendanceRepository;
 import org.example.dziennikbackend.repositories.GroupRepository;
@@ -71,5 +72,10 @@ public class LessonService {
         else {
             return null;
         }
+    }
+
+    @Transactional
+    public List<Attendance> getLessonAttendances(Long lessonId) {
+        return attendanceRepository.getAttendancesByLesson(lessonId);
     }
 }
