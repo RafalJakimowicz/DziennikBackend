@@ -6,13 +6,11 @@ public class SemesterDTO {
     private String code;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private Long majorId;
 
     public SemesterDTO(String code, LocalDateTime startDate, LocalDateTime endDate, Long majorId) {
         this.code = code;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.majorId = majorId;
     }
 
     public SemesterDTO() {}
@@ -39,13 +37,5 @@ public class SemesterDTO {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
-    }
-
-    public Long getMajorId() {
-        return this.majorId;
-    }
-
-    public void setMajorId(Long majorId) {
-        this.majorId = majorId;
     }
 }

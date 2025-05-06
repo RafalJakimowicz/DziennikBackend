@@ -22,8 +22,7 @@ CREATE TABLE semesters (
     id  BIGSERIAL  PRIMARY KEY,
     code  VARCHAR(255),
     start_date  TIMESTAMP  NOT NULL,
-    end_date  TIMESTAMP  NOT NULL,
-    major_id  BIGINT  REFERENCES majors(id)
+    end_date  TIMESTAMP  NOT NULL
 );
 
 -- 4. Students

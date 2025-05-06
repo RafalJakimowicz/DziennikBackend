@@ -28,7 +28,6 @@ public class SemesterService {
         newSemester.setCode(semester.getCode());
         newSemester.setStart(semester.getStartDate());
         newSemester.setEnd(semester.getEndDate());
-        newSemester.setMajor(majorRepository.getReferenceById(semester.getMajorId()));
         return semesterRepository.save(newSemester);
     }
 
@@ -68,9 +67,6 @@ public class SemesterService {
             }
             if (semester.getEndDate() != null){
                 semesterToUpdate.setEnd(semester.getEndDate());
-            }
-            if (semester.getMajorId() != null){
-                semesterToUpdate.setMajor(majorRepository.getReferenceById(semester.getMajorId()));
             }
             return semesterRepository.save(semesterToUpdate);
         }

@@ -1,5 +1,6 @@
 package org.example.dziennikbackend.models.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -7,6 +8,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "semesters")
@@ -22,15 +25,11 @@ public class Semester {
     @Column(nullable = false)
     private LocalDateTime end_date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "major_id")
-    private Major major;
-
     @OneToMany(
             mappedBy = "semester",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            fetch = FetchType.LAZY
+            fetch = LAZY
     )
     @JsonIgnore
     private List<CourseEdition> courseEditions = new ArrayList<>();
@@ -40,7 +39,6 @@ public class Semester {
         this.code = code;
         this.start_date = start_date;
         this.end_date = end_date;
-        this.major = major;
     }
 
     public void setId(Long id) {
@@ -91,13 +89,5 @@ public class Semester {
 
     public void setEnd(LocalDateTime end_date) {
         this.end_date = end_date;
-    }
-
-    public Major getMajor() {
-        return this.major;
-    }
-
-    public void setMajor(Major major) {
-        this.major = major;
     }
 }

@@ -53,7 +53,7 @@ public class SemesterController {
     }
 
     @DeleteMapping("/{code}")
-    public ResponseEntity deleteSemester(@PathVariable String code) {
+    public ResponseEntity<Void> deleteSemester(@PathVariable String code) {
         semesterService.deleteSemesterByCode(code);
         return ResponseEntity.noContent().build();
     }

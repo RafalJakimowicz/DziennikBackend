@@ -1,5 +1,6 @@
 package org.example.dziennikbackend.models.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.example.dziennikbackend.models.Enums.StudentStatus;
@@ -7,6 +8,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "students")
@@ -21,8 +24,9 @@ public class Student {
     @Column(unique = true, nullable = false, name = "album_number")
     private Integer albumNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "major_id")
+    @JsonBackReference(value = "major‑students")
     private Major major;
 
     @Column(nullable = false)
@@ -37,7 +41,7 @@ public class Student {
             mappedBy = "student",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            fetch = FetchType.LAZY
+            fetch = LAZY
     )
     @JsonIgnore
     private List<StudentInGroup> studentInGroups= new ArrayList<>();
@@ -46,7 +50,7 @@ public class Student {
             mappedBy = "student",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            fetch = FetchType.LAZY
+            fetch = LAZY
     )
     @JsonIgnore
     private List<Grade> grades= new ArrayList<>();
@@ -55,7 +59,7 @@ public class Student {
             mappedBy = "student",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            fetch = FetchType.LAZY
+            fetch = LAZY
     )
     @JsonIgnore
     private List<Attendance> attendances= new ArrayList<>();

@@ -1,10 +1,14 @@
 package org.example.dziennikbackend.models.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "majors")
@@ -17,23 +21,9 @@ public class Major {
     @Column(unique = true)
     private String shortName;
 
-    @JsonIgnore
-    @OneToMany(
-            mappedBy = "major",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
+    @OneToMany(mappedBy = "major", cascade = ALL, orphanRemoval = true, fetch = LAZY)
+    @JsonManagedReference(value = "major‑students")
     private List<Student> students = new ArrayList<>();
-
-    @JsonIgnore
-    @OneToMany(
-            mappedBy = "major",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    private List<Semester> semesters = new ArrayList<>();
 
     public Major() {}
     public Major(String name, String shortName) {
@@ -43,24 +33,6 @@ public class Major {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<Semester> getSemesters() {
-        return this.semesters;
-    }
-
-    public void setSemesters(List<Semester> semesters) {
-        this.semesters = semesters;
-    }
-
-    public void addSemester(Semester semester) {
-        this.semesters.add(semester);
-        semester.setMajor(this);
-    }
-
-    public void removeSemester(Semester semester){
-        this.semesters.remove(semester);
-        semester.setMajor(null);
     }
 
     public void setShortName(String shortName) {
