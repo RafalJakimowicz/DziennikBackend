@@ -47,14 +47,4 @@ public class AuthController {
         jwtUtil.revokeToken(token.getToken());
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @PostMapping("/me")
-    public ResponseEntity<AppUser> getUser (@RequestBody JwtTokenDTO token) throws Exception {
-        AppUser user = authService.getUserByLogin(token);
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
 }
