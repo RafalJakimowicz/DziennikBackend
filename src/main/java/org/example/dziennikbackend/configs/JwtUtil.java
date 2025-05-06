@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.example.dziennikbackend.models.DTOs.AuthDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -17,20 +18,15 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
+    @Value("${config.password}")
+    String TOKEN_KEY_B64;
 
     /* ---------- helpers -------------------------------------------------- */
 
     private SecretKey getSigningKey(){
-        String TOKEN_KEY_B64;
-        try{
-            ConfigService cs = new ConfigService();
-            TOKEN_KEY_B64 = cs.getConfigObject().getTokenPassword();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         // ⚠️  For HS256 the *raw* key must be ≥ 256 bits (32 bytes). Replace this with a stronger value in prod.
         // demo only (“haslo123”)
-        byte[] keyBytes = Decoders.BASE64.decode(TOKEN_KEY_B64);   // use jjwt-provided Decoders
+        byte[] keyBytes = Decoders.BASE64.decode(this.TOKEN_KEY_B64);   // use jjwt-provided Decoders
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

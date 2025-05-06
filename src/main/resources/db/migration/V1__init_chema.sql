@@ -31,7 +31,7 @@ CREATE TABLE students (
     id  BIGSERIAL  PRIMARY KEY,
     name  VARCHAR(255),
     surname  VARCHAR(255),
-    album_number  INTEGER  NOT NULL UNIQUE,
+    album_number  INTEGER UNIQUE,
     major_id  BIGINT  REFERENCES majors(id),
     year  INTEGER  NOT NULL,
     student_status  VARCHAR(20)  NOT NULL DEFAULT 'AKTYWNY'
