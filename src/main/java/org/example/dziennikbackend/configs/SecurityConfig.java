@@ -26,10 +26,11 @@ public class SecurityConfig {
     // ──────────────────── HTTP SECURITY ────────────────────
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http,
-                                    JwtRequestFilter jwtRequestFilter)       // <─ inject here
+                                    JwtRequestFilter jwtRequestFilter,
+                                    JpaUserDetailsService uds)       // <─ inject here
             throws Exception {
 
-        http.csrf(csrf -> csrf.disable())
+        http.userDetailsService(uds).csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/public/auth/**").permitAll()
                         .anyRequest().authenticated()

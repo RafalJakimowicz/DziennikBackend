@@ -1,8 +1,10 @@
 package org.example.dziennikbackend.controllers;
 
+import org.example.dziennikbackend.models.DTOs.JwtTokenDTO;
 import org.example.dziennikbackend.models.DTOs.PasswordsDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
 import org.example.dziennikbackend.services.AppUserService;
+import org.example.dziennikbackend.services.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +15,11 @@ import java.util.List;
 @RequestMapping("/api/private/users")
 public class AppUserController {
     private final AppUserService appUserService;
+    private final AuthService authService;
 
-    public AppUserController(AppUserService appUserService) {
+    public AppUserController(AppUserService appUserService, AuthService authService) {
         this.appUserService = appUserService;
+        this.authService = authService;
     }
 
     @GetMapping
@@ -26,6 +30,16 @@ public class AppUserController {
         }
 
         return ResponseEntity.ok(users);
+    }
+
+    @PostMapping("/me")
+    public ResponseEntity<AppUser> getUser (@RequestBody JwtTokenDTO token) throws Exception {
+        AppUser user = authService.getUserByLogin(token);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
