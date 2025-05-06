@@ -15,12 +15,14 @@ public class Group {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="course_part_id")
+    @JsonIgnore
     private CoursePart coursePart;
 
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
+    @JsonIgnore
     private AppUser user;
 
     @OneToMany(

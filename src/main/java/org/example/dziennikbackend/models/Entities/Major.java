@@ -22,7 +22,7 @@ public class Major {
     private String shortName;
 
     @OneToMany(mappedBy = "major", cascade = ALL, orphanRemoval = true, fetch = LAZY)
-    @JsonManagedReference(value = "major‑students")
+    @JsonIgnore
     private List<Student> students = new ArrayList<>();
 
     public Major() {}

@@ -32,7 +32,7 @@ public class CourseService {
 
     @Transactional
     public Course createCourse(Course course){
-        if(course.getName().isBlank() || course.getCode().isBlank() || course.getEts() == null){
+        if(course.getName().isBlank() || course.getCode().isBlank() || course.getEcts() == null){
             return null;
         }
         return courseRepository.save(course);
@@ -48,8 +48,8 @@ public class CourseService {
             if (!course.getCode().isBlank()){
                 courseOptional.get().setCode(course.getCode());
             }
-            if (course.getEts() != null){
-                courseOptional.get().setEts(course.getEts());
+            if (course.getEcts() != null){
+                courseOptional.get().setEcts(course.getEcts());
             }
             return courseRepository.save(courseOptional.get());
         } else {

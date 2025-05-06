@@ -16,6 +16,7 @@ public class Lesson {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="group_id")
+    @JsonIgnore
     private Group group;
 
     @Column(nullable = false)

@@ -1,5 +1,6 @@
 package org.example.dziennikbackend.models.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -18,19 +19,19 @@ public class Course {
 
     @Column(unique=true, nullable=false)
     private String code;
-    private Short ects;
+    private Long ects;
 
-    @JsonIgnore
     @OneToMany(
             mappedBy = "course",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
+    @JsonIgnore
     private List<CourseEdition> courseEditions = new ArrayList<>();
 
     public Course() {}
-    public Course(String name, String code, Short ects){
+    public Course(String name, String code, Long ects){
         this.name = name;
         this.code = code;
         this.ects = ects;
@@ -74,11 +75,11 @@ public class Course {
         return this.code;
     }
 
-    public void setEts(Short ects){
+    public void setEcts(Long ects){
         this.ects = ects;
     }
 
-    public Short getEts(){
+    public Long getEcts(){
         return this.ects;
     }
 }

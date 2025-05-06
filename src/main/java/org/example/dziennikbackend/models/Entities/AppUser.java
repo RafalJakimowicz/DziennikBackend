@@ -69,7 +69,7 @@ public class AppUser {
     }
 
     public void removeGroup(Group group){
-        this.groups.add(group);
+        this.groups.remove(group);
         group.setUser(null);
     }
 

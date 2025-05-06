@@ -17,6 +17,7 @@ public class CoursePart {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="course_edition_id", nullable = false)
+    @JsonIgnore
     private CourseEdition edition;
 
     @OneToMany(

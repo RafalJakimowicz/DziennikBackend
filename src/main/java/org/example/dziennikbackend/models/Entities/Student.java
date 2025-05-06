@@ -26,7 +26,7 @@ public class Student {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "major_id")
-    @JsonBackReference(value = "major‑students")
+    @JsonIgnore
     private Major major;
 
     @Column(nullable = false)
@@ -34,7 +34,6 @@ public class Student {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @ColumnDefault("'NIEOBECNY'")
     private StudentStatus studentStatus;
 
     @OneToMany(
@@ -169,11 +168,12 @@ public class Student {
         return this.albumNumber;
     }
 
-    public void setStatus(StudentStatus studentStatus){
+    public StudentStatus getStudentStatus() {
+        return studentStatus;
+    }
+
+    public void setStudentStatus(StudentStatus studentStatus) {
         this.studentStatus = studentStatus;
     }
 
-    public StudentStatus getStatus(){
-        return this.studentStatus;
-    }
 }

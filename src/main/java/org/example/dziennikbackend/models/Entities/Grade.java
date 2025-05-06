@@ -1,5 +1,6 @@
 package org.example.dziennikbackend.models.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -17,6 +18,7 @@ public class Grade {
 
     @JoinColumn(name = "student_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Student student;
 
     @Column(precision = 5, scale = 2, nullable = false)
@@ -29,6 +31,7 @@ public class Grade {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
+    @JsonIgnore
     private AppUser user;
 
     @Column(nullable = false)
@@ -36,6 +39,7 @@ public class Grade {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="group_id")
+    @JsonIgnore
     private Group group;
 
 

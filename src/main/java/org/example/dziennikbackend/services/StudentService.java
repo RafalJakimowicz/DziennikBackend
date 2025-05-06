@@ -26,7 +26,7 @@ public class StudentService {
         newStudent.setName(student.getName());
         newStudent.setSurname(student.getSurname());
         newStudent.setAlbumNumber(student.getAlbumNumber());
-        newStudent.setStatus(student.getStatus());
+        newStudent.setStudentStatus(student.getStatus());
         newStudent.setMajor(majorRepository.getReferenceById(student.getMajorId()));
         newStudent.setYear(student.getYear());
         return studentRepository.save(newStudent);
@@ -59,7 +59,7 @@ public class StudentService {
                 toUpdate.setYear(student.getYear());
             }
             if(student.getStatus() != null) {
-                toUpdate.setStatus(student.getStatus());
+                toUpdate.setStudentStatus(student.getStatus());
             }
             if(student.getMajorId() != null) {
                 toUpdate.setMajor(majorRepository.getReferenceById(student.getMajorId()));
