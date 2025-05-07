@@ -1,6 +1,7 @@
 package org.example.dziennikbackend.controllers;
 
 import org.example.dziennikbackend.configs.JwtUtil;
+import org.example.dziennikbackend.models.DTOs.AppUserDTO;
 import org.example.dziennikbackend.models.DTOs.AuthDTO;
 import org.example.dziennikbackend.models.DTOs.JwtTokenDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
@@ -23,8 +24,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<JwtTokenDTO> registerUser(@RequestBody AppUser _user) throws Exception {
-        AppUser appUser = authService.registerUser(_user);
+    public ResponseEntity<JwtTokenDTO> registerUser(@RequestBody AppUserDTO _user) throws Exception {
+        AppUserDTO appUser = authService.registerUser(_user);
         if (appUser == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -34,7 +35,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtTokenDTO> loginUser(@RequestBody AuthDTO _user) throws Exception {
-        AppUser user = authService.validateCredentials(_user);
+        AppUserDTO user = authService.validateCredentials(_user);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

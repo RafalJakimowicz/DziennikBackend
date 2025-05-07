@@ -2,6 +2,7 @@ package org.example.dziennikbackend.services;
 
 import jakarta.transaction.Transactional;
 import org.example.dziennikbackend.configs.JwtUtil;
+import org.example.dziennikbackend.models.DTOs.AppUserDTO;
 import org.example.dziennikbackend.models.DTOs.AuthDTO;
 import org.example.dziennikbackend.models.DTOs.JwtTokenDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
@@ -23,8 +24,29 @@ public class AuthService {
         this.jwtUtil = jwtUtil;
     }
 
+    private AppUserDTO changeUserToDTO(AppUser user) {
+        AppUserDTO userDTO = new AppUserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setName(user.getName());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setSurname(user.getSurname());
+        userDTO.setLogin(user.getLogin());
+        return userDTO;
+    }
+
+    private AppUser changeUserToEntity(AppUserDTO userDTO) {
+        AppUser user = new AppUser();
+        user.setEmail(userDTO.getEmail());
+        user.setName(userDTO.getName());
+        user.setSurname(userDTO.getSurname());
+        user.setLogin(userDTO.getLogin());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        return user;
+    }
+
     @Transactional
-    public AppUser validateCredentials(AuthDTO authDTO) {
+    public AppUserDTO validateCredentials(AuthDTO authDTO) {
         Optional<AppUser> user = appUserRepository.findByLogin(authDTO.getLogin());
         if (user.isEmpty()) {
             return null;
@@ -32,27 +54,27 @@ public class AuthService {
         if (!passwordEncoder.matches(authDTO.getPassword(), user.get().getPassword())){
             return null;
         }
-        return user.get();
+        return changeUserToDTO(user.get());
     }
 
     @Transactional
-    public AppUser registerUser(AppUser user){
+    public AppUserDTO registerUser(AppUserDTO user){
         Optional<AppUser> newUser = appUserRepository.findByLogin(user.getLogin());
         if (newUser.isPresent()) {
             return null;
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        newUser = Optional.of(appUserRepository.save(user));
-        return newUser.get();
+        newUser = Optional.of(appUserRepository.save(changeUserToEntity(user)));
+        return changeUserToDTO(newUser.get());
     }
 
     @Transactional
-    public AppUser getUserByLogin(JwtTokenDTO token) throws Exception {
+    public AppUserDTO getUserByLogin(JwtTokenDTO token) throws Exception {
         String username = jwtUtil.extractUsernameFromToken(token.getToken());
         Optional<AppUser> user = appUserRepository.findByLogin(username);
         if (user.isEmpty()) {
             return null;
         }
-        return user.get();
+        return changeUserToDTO(user.get());
     }
 }

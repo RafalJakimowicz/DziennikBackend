@@ -34,8 +34,8 @@ public class AppUserController {
     }
 
     @PostMapping("/me")
-    public ResponseEntity<AppUser> getUser (@RequestBody JwtTokenDTO token) throws Exception {
-        AppUser user = authService.getUserByLogin(token);
+    public ResponseEntity<AppUserDTO> getUser (@RequestBody JwtTokenDTO token) throws Exception {
+        AppUserDTO user = authService.getUserByLogin(token);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
