@@ -1,11 +1,13 @@
 package org.example.dziennikbackend.services;
 
 import jakarta.transaction.Transactional;
+import org.example.dziennikbackend.models.DTOs.AppUserDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
 import org.example.dziennikbackend.repositories.AppUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,35 +20,59 @@ public class AppUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Transactional
-    public List<AppUser> getAllUsers(){
-        List<AppUser> users =  appUserRepository.findAll();
-        for (AppUser user : users) {
-            user.setPassword(null);
-        }
-        return users;
+    private AppUserDTO changeUserToDTO(AppUser user) {
+        AppUserDTO userDTO = new AppUserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setName(user.getName());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setSurname(user.getSurname());
+        userDTO.setLogin(user.getLogin());
+        return userDTO;
+    }
+
+    private AppUser changeUserToEntity(AppUserDTO userDTO) {
+        AppUser user = new AppUser();
+        user.setEmail(userDTO.getEmail());
+        user.setName(userDTO.getName());
+        user.setSurname(userDTO.getSurname());
+        user.setLogin(userDTO.getLogin());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        return user;
     }
 
     @Transactional
-    public AppUser getUserById(Long id){
+    public List<AppUserDTO> getAllUsers(){
+        List<AppUser> users =  appUserRepository.findAll();
+        List<AppUserDTO> userDTOs = new ArrayList<>();
+        for (AppUser user : users) {
+            user.setPassword(null);
+            userDTOs.add(changeUserToDTO(user));
+        }
+        return userDTOs;
+    }
+
+    @Transactional
+    public AppUserDTO getUserById(Long id){
         Optional<AppUser> user = appUserRepository.findById(id);
         AppUser appUser = user.orElse(null);
         if(appUser == null){
             return null;
         }
         appUser.setPassword(null);
-        return appUser;
+        return changeUserToDTO(appUser);
     }
 
     @Transactional
-    public AppUser createUser(AppUser user){
-        AppUser appUser = appUserRepository.save(user);
-        appUser.setPassword(null);
-        return appUser;
+    public AppUserDTO createUser(AppUserDTO user){
+        AppUser appUser = changeUserToEntity(user);
+        AppUser newUser = appUserRepository.save(appUser);
+        newUser.setPassword(null);
+        return changeUserToDTO(newUser);
     }
 
     @Transactional
-    public AppUser updateUser(Long id, AppUser user){
+    public AppUserDTO updateUser(Long id, AppUserDTO user){
         Optional<AppUser> userOptional = appUserRepository.findById(id);
         if(userOptional.isEmpty()){
             return null;
@@ -62,11 +88,11 @@ public class AppUserService {
         }
         AppUser savedUser = appUserRepository.save(userOptional.get());
         savedUser.setPassword(null);
-        return savedUser;
+        return changeUserToDTO(savedUser);
     }
 
     @Transactional
-    public AppUser updatePassword(Long id, String oldPassword, String newPassword){
+    public AppUserDTO updatePassword(Long id, String oldPassword, String newPassword){
         if (oldPassword == null || passwordEncoder.matches(newPassword, oldPassword) || newPassword == null){
             return null;
         }
@@ -78,7 +104,7 @@ public class AppUserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         AppUser updatedUser = appUserRepository.save(user);
         updatedUser.setPassword(null);
-        return updatedUser;
+        return changeUserToDTO(updatedUser);
     }
 
     @Transactional

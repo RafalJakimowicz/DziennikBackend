@@ -1,10 +1,8 @@
 package org.example.dziennikbackend.models.Entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.example.dziennikbackend.models.Enums.StudentStatus;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +12,8 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Table(name = "students")
 public class Student {
+
+    /* ──────────────────── pola podstawowe ──────────────────── */
     @Id
     @GeneratedValue
     private Long id;
@@ -26,7 +26,7 @@ public class Student {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "major_id")
-    @JsonIgnore
+    @JsonIgnore                     // nie serializujemy Major w JSON‑ie
     private Major major;
 
     @Column(nullable = false)
@@ -36,144 +36,95 @@ public class Student {
     @Column(nullable = false)
     private StudentStatus studentStatus;
 
-    @OneToMany(
-            mappedBy = "student",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = LAZY
-    )
+    /* ──────────────────── relacje kolekcyjne ──────────────────── */
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
     @JsonIgnore
-    private List<StudentInGroup> studentInGroups= new ArrayList<>();
+    private List<StudentInGroup> studentInGroups = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "student",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = LAZY
-    )
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
     @JsonIgnore
-    private List<Grade> grades= new ArrayList<>();
+    private List<Grade> grades = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "student",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = LAZY
-    )
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
     @JsonIgnore
-    private List<Attendance> attendances= new ArrayList<>();
+    private List<Attendance> attendances = new ArrayList<>();
 
+    /* ──────────────────── konstruktory ──────────────────── */
     public Student() {}
-    public Student(String name, String surname, Integer album_number) {
+
+    public Student(String name, String surname, Integer albumNumber) {
         this.name = name;
         this.surname = surname;
-        this.albumNumber = album_number;
+        this.albumNumber = albumNumber;
     }
 
-    public void removeAttendance(Attendance attendance){
-        this.attendances.remove(attendance);
-        attendance.setStudent(null);
-    }
-
-    public void addAttendance(Attendance attendance){
-        this.attendances.add(attendance);
+    /* ──────────────────── metody pomocnicze relacji ──────────────────── */
+    public void addAttendance(Attendance attendance) {
+        attendances.add(attendance);
         attendance.setStudent(this);
     }
 
-    public void setAttendances(List<Attendance> attendances) {
-        this.attendances = attendances;
+    public void removeAttendance(Attendance attendance) {
+        attendances.remove(attendance);
+        attendance.setStudent(null);
     }
 
-    public List<Attendance> getAttendances() {
-        return this.attendances;
-    }
-
-    public void removeGrade(Grade grade){
-        this.grades.remove(grade);
+    public void addGrade(Grade grade) {
+        grades.add(grade);
         grade.setStudent(this);
     }
 
-    public void addGrade(Grade grade){
-        this.grades.add(grade);
-        grade.setStudent(this);
+    public void removeGrade(Grade grade) {
+        grades.remove(grade);
+        grade.setStudent(null);
     }
 
-    public void setGrades(List<Grade> grades) {
-        this.grades = grades;
-    }
-
-    public List<Grade> getGrades() {
-        return this.grades;
-    }
-
-    public void removeStudentInGroup(StudentInGroup sg){
-        this.studentInGroups.remove(sg);
-        sg.setStudent(null);
-    }
-
-    public void addStudentInGroup(StudentInGroup sg){
-        this.studentInGroups.add(sg);
+    public void addStudentInGroup(StudentInGroup sg) {
+        studentInGroups.add(sg);
         sg.setStudent(this);
     }
 
-    public List<StudentInGroup> getStudentInGroups() {
-        return this.studentInGroups;
+    public void removeStudentInGroup(StudentInGroup sg) {
+        studentInGroups.remove(sg);
+        sg.setStudent(null);
     }
 
-    public void setStudentInGroups(List<StudentInGroup> studentInGroups) {
-        this.studentInGroups = studentInGroups;
-    }
+    /* ──────────────────── gettery / settery ──────────────────── */
+    public Long getId() {return id;}
 
-    public Major getMajor(){
-        return this.major;
-    }
+    public String getName() {return name;}
 
-    public void setMajor(Major major){
-        this.major = major;
-    }
+    public void setName(String name) {this.name = name;}
 
-    public Integer getYear(){
-        return this.year;
-    }
+    public String getSurname() {return surname;}
 
-    public void setYear(Integer year){
-        this.year = year;
-    }
+    public void setSurname(String surname) {this.surname = surname;}
 
-    public Long getId() {
-        return this.id;
-    }
+    public Integer getAlbumNumber() {return albumNumber;}
 
-    public void setName(String name){
-        this.name = name;
-    }
+    public void setAlbumNumber(Integer albumNumber) {this.albumNumber = albumNumber;}
 
-    public String getName(){
-        return this.name;
-    }
+    public Major getMajor() {return major;}
 
-    public void setSurname(String surname){
-        this.surname = surname;
-    }
+    public void setMajor(Major major) {this.major = major;}
 
-    public String getSurname(){
-        return this.surname;
-    }
+    public Integer getYear() {return year;}
 
-    public void setAlbumNumber(Integer album_number){
-        this.albumNumber = album_number;
-    }
+    public void setYear(Integer year) {this.year = year;}
 
-    public Integer getAlbumNumber(){
-        return this.albumNumber;
-    }
+    public StudentStatus getStudentStatus() {return studentStatus;}
 
-    public StudentStatus getStudentStatus() {
-        return studentStatus;
-    }
+    public void setStudentStatus(StudentStatus studentStatus) {this.studentStatus = studentStatus;}
 
-    public void setStudentStatus(StudentStatus studentStatus) {
-        this.studentStatus = studentStatus;
-    }
+    public List<StudentInGroup> getStudentInGroups() {return studentInGroups;}
 
+    public void setStudentInGroups(List<StudentInGroup> studentInGroups) {this.studentInGroups = studentInGroups;}
+
+    public List<Grade> getGrades() {return grades;}
+
+    public void setGrades(List<Grade> grades) {this.grades = grades;}
+
+    public List<Attendance> getAttendances() {return attendances;}
+
+    public void setAttendances(List<Attendance> attendances) {this.attendances = attendances;}
 }

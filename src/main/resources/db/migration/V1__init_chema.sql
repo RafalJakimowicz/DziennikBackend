@@ -84,7 +84,7 @@ CREATE TABLE attendances (
     id  BIGSERIAL  PRIMARY KEY,
     lesson_id  BIGINT  REFERENCES lessons(id),
     student_id BIGINT  REFERENCES students(id),
-    status  VARCHAR(20),
+    studentStatus  VARCHAR(20),
     user_id  BIGINT  REFERENCES users(id),
     date  TIMESTAMP  NOT NULL
 );

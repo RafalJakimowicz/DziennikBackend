@@ -1,7 +1,5 @@
 package org.example.dziennikbackend.models.DTOs;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SemesterDTO {
+public class MajorDTO {
     private Long id;
-    private String code;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private String name;
+    private String shortName;
 }

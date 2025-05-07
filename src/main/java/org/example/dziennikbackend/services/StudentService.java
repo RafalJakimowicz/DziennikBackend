@@ -2,9 +2,7 @@ package org.example.dziennikbackend.services;
 
 import jakarta.transaction.Transactional;
 import org.example.dziennikbackend.models.DTOs.StudentDTO;
-import org.example.dziennikbackend.models.Entities.Major;
 import org.example.dziennikbackend.models.Entities.Student;
-import org.example.dziennikbackend.models.Enums.StudentStatus;
 import org.example.dziennikbackend.repositories.MajorRepository;
 import org.example.dziennikbackend.repositories.StudentRepository;
 import org.springframework.stereotype.Service;
@@ -26,7 +24,7 @@ public class StudentService {
         newStudent.setName(student.getName());
         newStudent.setSurname(student.getSurname());
         newStudent.setAlbumNumber(student.getAlbumNumber());
-        newStudent.setStudentStatus(student.getStatus());
+        newStudent.setStudentStatus(student.getStudentStatus());
         newStudent.setMajor(majorRepository.getReferenceById(student.getMajorId()));
         newStudent.setYear(student.getYear());
         return studentRepository.save(newStudent);
@@ -58,8 +56,8 @@ public class StudentService {
             if(student.getYear() != null) {
                 toUpdate.setYear(student.getYear());
             }
-            if(student.getStatus() != null) {
-                toUpdate.setStudentStatus(student.getStatus());
+            if(student.getStudentStatus() != null) {
+                toUpdate.setStudentStatus(student.getStudentStatus());
             }
             if(student.getMajorId() != null) {
                 toUpdate.setMajor(majorRepository.getReferenceById(student.getMajorId()));

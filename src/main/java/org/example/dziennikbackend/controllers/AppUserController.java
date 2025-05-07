@@ -1,5 +1,6 @@
 package org.example.dziennikbackend.controllers;
 
+import org.example.dziennikbackend.models.DTOs.AppUserDTO;
 import org.example.dziennikbackend.models.DTOs.JwtTokenDTO;
 import org.example.dziennikbackend.models.DTOs.PasswordsDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
@@ -23,9 +24,9 @@ public class AppUserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AppUser>> getAllUsers() {
-        List<AppUser> users = appUserService.getAllUsers();
-        if (users.size() == 0){
+    public ResponseEntity<List<AppUserDTO>> getAllUsers() {
+        List<AppUserDTO> users = appUserService.getAllUsers();
+        if (users.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -43,8 +44,8 @@ public class AppUserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AppUser> getUserById(@PathVariable Long id) {
-        AppUser user = appUserService.getUserById(id);
+    public ResponseEntity<AppUserDTO> getUserById(@PathVariable Long id) {
+        AppUserDTO user = appUserService.getUserById(id);
         if(user == null){
             return ResponseEntity.notFound().build();
         }
@@ -52,13 +53,13 @@ public class AppUserController {
     }
 
     @PostMapping
-    public ResponseEntity<AppUser> createUser(@RequestBody AppUser user) {
+    public ResponseEntity<AppUserDTO> createUser(@RequestBody AppUserDTO user) {
         return ResponseEntity.status(HttpStatus.CREATED).body(appUserService.createUser(user));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AppUser> updateUser(@PathVariable Long id, @RequestBody AppUser user) {
-        AppUser updatedUser = appUserService.updateUser(id, user);
+    public ResponseEntity<AppUserDTO> updateUser(@PathVariable Long id, @RequestBody AppUserDTO user) {
+        AppUserDTO updatedUser = appUserService.updateUser(id, user);
         if(updatedUser == null){
             return ResponseEntity.notFound().build();
         }
@@ -66,8 +67,8 @@ public class AppUserController {
     }
 
     @PutMapping("/{id}/password")
-    public ResponseEntity<AppUser> updateUserPassword(@PathVariable Long id, @RequestBody PasswordsDTO upDTO) {
-        AppUser user = appUserService.updatePassword(id, upDTO.getOldPassword(), upDTO.getNewPassword());
+    public ResponseEntity<AppUserDTO> updateUserPassword(@PathVariable Long id, @RequestBody PasswordsDTO upDTO) {
+        AppUserDTO user = appUserService.updatePassword(id, upDTO.getOldPassword(), upDTO.getNewPassword());
         if(user == null){
             return ResponseEntity.notFound().build();
         }

@@ -1,39 +1,17 @@
 package org.example.dziennikbackend.models.DTOs;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CourseEditionDTO {
+    private Long id;
     private Long courseId;
     private Long semesterId;
     private Long userId;
-
-    public CourseEditionDTO(Long courseId, Long semesterId, Long userId) {
-        this.courseId = courseId;
-        this.semesterId = semesterId;
-        this.userId = userId;
-    }
-
-    public CourseEditionDTO() {}
-
-    public Long getCourseId() {
-        return this.courseId;
-    }
-
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
-    }
-
-    public Long getSemesterId() {
-        return this.semesterId;
-    }
-
-    public void setSemesterId(Long semesterId) {
-        this.semesterId = semesterId;
-    }
-
-    public Long getUserId() {
-        return this.userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 }
