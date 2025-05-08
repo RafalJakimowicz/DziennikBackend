@@ -17,17 +17,17 @@ public class SemesterController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Semester>> getAllSemesters() {
-        List<Semester> semesters = semesterService.getAllSemesters();
+    public ResponseEntity<List<SemesterDTO>> getAllSemesters() {
+        List<SemesterDTO> semesters = semesterService.getAllSemesters();
         if (semesters.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(semesters);
     }
 
-    @GetMapping("/{code}")
-    public ResponseEntity<Semester> getSemesterByCode(@PathVariable String code) {
-        Semester semester = semesterService.getSemesterByCode(code);
+    @GetMapping("/{id}")
+    public ResponseEntity<SemesterDTO> getSemesterById(@PathVariable Long id) {
+        SemesterDTO semester = semesterService.getSemesterById(id);
         if (semester == null) {
             return ResponseEntity.notFound().build();
         }
@@ -35,26 +35,26 @@ public class SemesterController {
     }
 
     @PostMapping
-    public ResponseEntity<Semester> createSemester(@RequestBody SemesterDTO semester) {
-        Semester createdSemester = semesterService.createSemester(semester);
+    public ResponseEntity<SemesterDTO> createSemester(@RequestBody SemesterDTO semester) {
+        SemesterDTO createdSemester = semesterService.createSemester(semester);
         if (createdSemester == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(createdSemester);
     }
 
-    @PutMapping("/{code}")
-    public ResponseEntity<Semester> updateSemester(@PathVariable String code, @RequestBody SemesterDTO semester) {
-        Semester returnedSemester = semesterService.updateSemester(semester);
+    @PutMapping("/{id}")
+    public ResponseEntity<SemesterDTO> updateSemester(@PathVariable Long id, @RequestBody SemesterDTO semester) {
+        SemesterDTO returnedSemester = semesterService.updateSemester(id, semester);
         if (returnedSemester == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(returnedSemester);
     }
 
-    @DeleteMapping("/{code}")
-    public ResponseEntity<Void> deleteSemester(@PathVariable String code) {
-        semesterService.deleteSemesterByCode(code);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSemester(@PathVariable Long id) {
+        semesterService.deleteSemesterById(id);
         return ResponseEntity.noContent().build();
     }
 }
