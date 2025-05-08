@@ -1,5 +1,6 @@
 package org.example.dziennikbackend.controllers;
 
+import org.example.dziennikbackend.models.DTOs.CourseDTO;
 import org.example.dziennikbackend.models.Entities.Course;
 import org.example.dziennikbackend.services.CourseService;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,9 @@ public class CourseController {
         return ResponseEntity.ok(courseService.findAll());
     }
 
-    @GetMapping("/{code}")
-    public ResponseEntity<Course> getCourseByCode(@PathVariable String code) {
-        Course course = courseService.findByCode(code);
+    @GetMapping("/{id}")
+    public ResponseEntity<CourseDTO> getCourseById(@PathVariable Long id) {
+        CourseDTO course = courseService.findById(id);
         if (course == null) {
             return ResponseEntity.notFound().build();
         }
@@ -30,26 +31,26 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<Course> createCourse(@RequestBody Course course) {
-        Course newCourse = courseService.createCourse(course);
+    public ResponseEntity<CourseDTO> createCourse(@RequestBody CourseDTO course) {
+        CourseDTO newCourse = courseService.createCourse(course);
         if (newCourse == null) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(newCourse);
     }
 
-    @PutMapping("/{code}")
-    public ResponseEntity<Course> updateCourse(@PathVariable String code, @RequestBody Course course) {
-        Course updatedCourse = courseService.updateCourse(code, course);
+    @PutMapping("/{id}")
+    public ResponseEntity<CourseDTO> updateCourse(@PathVariable Long id, @RequestBody CourseDTO course) {
+        CourseDTO updatedCourse = courseService.updateCourse(id, course);
         if (updatedCourse == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedCourse);
     }
 
-    @DeleteMapping("/{code}")
-    public ResponseEntity<Void> deleteCourse(@PathVariable String code) {
-        courseService.deleteCourseByCode(code);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
+        courseService.deleteCourseById(id);
         return ResponseEntity.noContent().build();
     }
 }

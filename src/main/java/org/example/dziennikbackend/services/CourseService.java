@@ -1,6 +1,7 @@
 package org.example.dziennikbackend.services;
 
 import jakarta.transaction.Transactional;
+import org.example.dziennikbackend.models.DTOs.CourseDTO;
 import org.example.dziennikbackend.models.Entities.Course;
 import org.example.dziennikbackend.repositories.CourseRepository;
 import org.springframework.stereotype.Service;
@@ -15,32 +16,50 @@ public class CourseService {
         this.courseRepository = courseRepository;
     }
 
+    private CourseDTO changeObjectToDTO(Course course) {
+        CourseDTO courseDTO = new CourseDTO();
+        courseDTO.setId(course.getId());
+        courseDTO.setName(course.getName());
+        courseDTO.setCode(course.getCode());
+        courseDTO.setEcts(course.getEcts());
+        return courseDTO;
+    }
+    
+    private Course changeDTOToObject(CourseDTO courseDTO) {
+        Course course = new Course();
+        course.setId(courseDTO.getId());
+        course.setName(courseDTO.getName());
+        course.setCode(courseDTO.getCode());
+        course.setEcts(courseDTO.getEcts());
+        return course;
+    }
+    
     @Transactional
     public List<Course> findAll() {
         return courseRepository.findAll();
     }
-
+    
     @Transactional
-    public Course findByCode(String code) {
-        Optional<Course> course = courseRepository.findByCode(code);
+    public CourseDTO findById(Long id) {
+        Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()) {
-            return course.get();
+            return changeObjectToDTO(course.get());
         } else {
             return null;
         }
     }
 
     @Transactional
-    public Course createCourse(Course course){
+    public CourseDTO createCourse(CourseDTO course){
         if(course.getName().isBlank() || course.getCode().isBlank() || course.getEcts() == null){
             return null;
         }
-        return courseRepository.save(course);
+        return changeObjectToDTO(courseRepository.save(changeDTOToObject(course)));
     }
 
     @Transactional
-    public Course updateCourse(String code, Course course){
-        Optional<Course> courseOptional = courseRepository.findByCode(code);
+    public CourseDTO updateCourse(Long id, CourseDTO course){
+        Optional<Course> courseOptional = courseRepository.findById(id);
         if (courseOptional.isPresent()) {
             if(!course.getName().isBlank()){
                 courseOptional.get().setName(course.getName());
@@ -51,14 +70,14 @@ public class CourseService {
             if (course.getEcts() != null){
                 courseOptional.get().setEcts(course.getEcts());
             }
-            return courseRepository.save(courseOptional.get());
+            return changeObjectToDTO(courseRepository.save(courseOptional.get()));
         } else {
             return null;
         }
     }
 
     @Transactional
-    public void deleteCourseByCode(String code){
-        courseRepository.deleteByCode(code);
+    public void deleteCourseById(Long id){
+        courseRepository.deleteById(id);
     }
 }
