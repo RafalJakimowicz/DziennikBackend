@@ -18,13 +18,13 @@ public class CourseEditionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CourseEdition>> getAllCourseEditions() {
+    public ResponseEntity<List<CourseEditionDTO>> getAllCourseEditions() {
         return new ResponseEntity<>(courseEditionService.getAllCourseEditions(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CourseEdition> getCourseEditionById(@PathVariable Long id) {
-        CourseEdition courseEdition = courseEditionService.getCourseEditionById(id);
+    public ResponseEntity<CourseEditionDTO> getCourseEditionById(@PathVariable Long id) {
+        CourseEditionDTO courseEdition = courseEditionService.getCourseEditionById(id);
         if (courseEdition == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -32,13 +32,13 @@ public class CourseEditionController {
     }
 
     @PostMapping
-    public ResponseEntity<CourseEdition> createCourseEdition(@RequestBody CourseEditionDTO courseEdition) {
+    public ResponseEntity<CourseEditionDTO> createCourseEdition(@RequestBody CourseEditionDTO courseEdition) {
         return new ResponseEntity<>(courseEditionService.createCourseEdition(courseEdition), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CourseEdition> updateCourseEdition(@PathVariable Long id, @RequestBody CourseEditionDTO courseEdition) {
-        CourseEdition courseEditionUpdated = courseEditionService.updateCourseEdition(id, courseEdition);
+    public ResponseEntity<CourseEditionDTO> updateCourseEdition(@PathVariable Long id, @RequestBody CourseEditionDTO courseEdition) {
+        CourseEditionDTO courseEditionUpdated = courseEditionService.updateCourseEdition(id, courseEdition);
         if (courseEditionUpdated == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

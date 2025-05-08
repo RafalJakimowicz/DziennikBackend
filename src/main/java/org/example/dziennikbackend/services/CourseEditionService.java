@@ -9,6 +9,7 @@ import org.example.dziennikbackend.repositories.CourseRepository;
 import org.example.dziennikbackend.repositories.SemesterRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,27 +29,52 @@ public class CourseEditionService {
         this.appUserRepository = appUserRepository;
     }
 
-    @Transactional
-    public CourseEdition createCourseEdition(CourseEditionDTO courseEdition) {
-        CourseEdition courseEditionEntity = new CourseEdition();
-        courseEditionEntity.setCourse(courseRepository.getReferenceById(courseEdition.getCourseId()));
-        courseEditionEntity.setSemester(semesterRepository.getReferenceById(courseEdition.getSemesterId()));
-        courseEditionEntity.setUser(appUserRepository.getReferenceById(courseEdition.getUserId()));
-        return courseEditionRepository.save(courseEditionEntity);
+    private CourseEditionDTO changeObjectToDTO(CourseEdition courseEdition) {
+        CourseEditionDTO courseEditionDTO = new CourseEditionDTO();
+        courseEditionDTO.setId(courseEdition.getId());
+        courseEditionDTO.setCourseId(courseEdition.getCourse().getId());
+        courseEditionDTO.setSemesterId(courseEdition.getSemester().getId());
+        courseEditionDTO.setUserId(courseEdition.getUser().getId());
+        return courseEditionDTO;
+    }
+
+    private CourseEdition changeDTOtoObject(CourseEditionDTO courseEditionDTO) {
+        CourseEdition courseEdition = new CourseEdition();
+        courseEdition.setId(courseEditionDTO.getId());
+        courseEdition.setUser(appUserRepository.getReferenceById(courseEditionDTO.getUserId()));
+        courseEdition.setCourse(courseRepository.getReferenceById(courseEditionDTO.getCourseId()));
+        courseEdition.setSemester(semesterRepository.getReferenceById(courseEditionDTO.getSemesterId()));
+        return courseEdition;
     }
 
     @Transactional
-    public CourseEdition getCourseEditionById(Long id) {
-        return courseEditionRepository.findById(id).orElse(null);
+    public CourseEditionDTO createCourseEdition(CourseEditionDTO courseEdition) {
+        return changeObjectToDTO(courseEditionRepository.save(changeDTOtoObject(courseEdition)));
     }
 
     @Transactional
-    public List<CourseEdition> getAllCourseEditions() {
-        return courseEditionRepository.findAll();
+    public CourseEditionDTO getCourseEditionById(Long id) {
+        CourseEdition courseEdition = courseEditionRepository.findById(id).orElse(null);
+        if (courseEdition == null) {
+            return null;
+        }
+        else{
+            return changeObjectToDTO(courseEdition);
+        }
     }
 
     @Transactional
-    public CourseEdition updateCourseEdition(Long id, CourseEditionDTO courseEdition) {
+    public List<CourseEditionDTO> getAllCourseEditions() {
+        List<CourseEdition> courseEditions = courseEditionRepository.findAll();
+        List<CourseEditionDTO> courseEditionDTOS = new ArrayList<>();
+        for(CourseEdition courseEdition : courseEditions){
+            courseEditionDTOS.add(changeObjectToDTO(courseEdition));
+        }
+        return courseEditionDTOS;
+    }
+
+    @Transactional
+    public CourseEditionDTO updateCourseEdition(Long id, CourseEditionDTO courseEdition) {
         Optional<CourseEdition> oldEdition = courseEditionRepository.findById(id);
         if (oldEdition.isPresent()) {
             CourseEdition courseEditionToUpdate = oldEdition.get();
@@ -61,7 +87,7 @@ public class CourseEditionService {
             if (courseEdition.getUserId() != null) {
                 courseEditionToUpdate.setUser(appUserRepository.getReferenceById(courseEdition.getUserId()));
             }
-            return courseEditionRepository.save(courseEditionToUpdate);
+            return changeObjectToDTO(courseEditionRepository.save(courseEditionToUpdate));
         } else {
             return null;
         }
