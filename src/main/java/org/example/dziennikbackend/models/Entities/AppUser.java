@@ -2,10 +2,13 @@ package org.example.dziennikbackend.models.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter @Setter
 @Entity
 @Table(name="users")
 public class AppUser {
@@ -78,13 +81,6 @@ public class AppUser {
         group.setUser(this);
     }
 
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
-    }
-
-    public List<Group> getGroups() {
-        return this.groups;
-    }
 
     public void removeAttendance(Attendance attendance){
         this.attendances.remove(attendance);
@@ -96,14 +92,6 @@ public class AppUser {
         attendance.setUser(this);
     }
 
-    public List<Attendance> getAttendances() {
-        return this.attendances;
-    }
-
-    public void setAttendances(List<Attendance> attendances) {
-        this.attendances = attendances;
-    }
-
     public void removeCourseEdition(CourseEdition edition){
         this.courseEditions.remove(edition);
         edition.setUser(null);
@@ -112,57 +100,5 @@ public class AppUser {
     public void addCourseEdition(CourseEdition edition){
         this.courseEditions.add(edition);
         edition.setUser(this);
-    }
-
-    public void setCourseEditions(List<CourseEdition> courseEditions){
-        this.courseEditions = courseEditions;
-    }
-
-    public List<CourseEdition> getCourseEditions(){
-        return this.courseEditions;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getSurname() {
-        return this.surname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getLogin() {
-        return this.login;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPassword() {
-        return this.password;
     }
 }

@@ -2,7 +2,10 @@ package org.example.dziennikbackend.models.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter @Setter
 @Entity
 @Table(name = "students_in_groups")
 public class StudentInGroup {
@@ -23,26 +26,6 @@ public class StudentInGroup {
     public StudentInGroup() {}
     public StudentInGroup(Student student, Group group){
         this.student = student;
-        this.group = group;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public Student getStudent(){
-        return this.student;
-    }
-
-    public void setStudent(Student student){
-        this.student = student;
-    }
-
-    public Group getGroup(){
-        return this.group;
-    }
-
-    public void setGroup(Group group){
         this.group = group;
     }
 }

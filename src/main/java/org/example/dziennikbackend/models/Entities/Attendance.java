@@ -1,12 +1,15 @@
 package org.example.dziennikbackend.models.Entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.dziennikbackend.models.Enums.AttendanceStatus;
 import org.example.dziennikbackend.models.Enums.StudentStatus;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
+@Getter @Setter
 @Entity
 @Table(name="attendances")
 public class Attendance {
@@ -40,50 +43,6 @@ public class Attendance {
         this.student = student;
         this.status = status;
         this.user = user;
-        this.date = date;
-    }
-
-    public Long getId(){
-        return this.id;
-    }
-
-    public Lesson getLesson(){
-        return this.lesson;
-    }
-
-    public void setLesson(Lesson lesson){
-        this.lesson = lesson;
-    }
-
-    public Student getStudent(){
-        return this.student;
-    }
-
-    public void setStudent(Student student){
-        this.student = student;
-    }
-
-    public AttendanceStatus getStatus(){
-        return this.status;
-    }
-
-    public void setStatus(AttendanceStatus status){
-        this.status = status;
-    }
-
-    public AppUser getUser(){
-        return this.user;
-    }
-
-    public void setUser(AppUser user){
-        this.user = user;
-    }
-
-    public LocalDateTime getDate(){
-        return this.date;
-    }
-
-    public void setDate(LocalDateTime date){
         this.date = date;
     }
 }

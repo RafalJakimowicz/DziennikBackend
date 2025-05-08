@@ -3,11 +3,14 @@ package org.example.dziennikbackend.models.Entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity @Getter
+@Setter
 @Table(name = "course_editions")
 public class CourseEdition {
     @Id
@@ -54,41 +57,5 @@ public class CourseEdition {
     public void addCoursePart(CoursePart part){
         this.courseParts.add(part);
         part.setEdition(this);
-    }
-
-    public void setCourseParts(List<CoursePart> courseParts) {
-        this.courseParts = courseParts;
-    }
-
-    public List<CoursePart> getCourseParts() {
-        return this.courseParts;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
-    public Course getCourse() {
-        return this.course;
-    }
-
-    public void setSemester(Semester semester) {
-        this.semester = semester;
-    }
-
-    public Semester getSemester() {
-        return this.semester;
-    }
-
-    public void setUser(AppUser user) {
-        this.user = user;
-    }
-
-    public AppUser getUser() {
-        return this.user;
     }
 }

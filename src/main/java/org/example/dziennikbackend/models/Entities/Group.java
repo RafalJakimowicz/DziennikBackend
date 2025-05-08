@@ -2,10 +2,13 @@ package org.example.dziennikbackend.models.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter @Setter
 @Entity
 @Table(name = "groups")
 public class Group {
@@ -69,14 +72,6 @@ public class Group {
         grade.setGroup(this);
     }
 
-    public void setGrades(List<Grade> grades) {
-        this.grades = grades;
-    }
-
-    public List<Grade> getGrades() {
-        return this.grades;
-    }
-
     public void removeStudentInGroup(StudentInGroup sg){
         this.studentInGroups.remove(sg);
         sg.setGroup(null);
@@ -87,14 +82,6 @@ public class Group {
         sg.setGroup(this);
     }
 
-    public void setStudentInGroups(List<StudentInGroup> studentInGroups) {
-        this.studentInGroups = studentInGroups;
-    }
-
-    public List<StudentInGroup> getStudentInGroups() {
-        return this.studentInGroups;
-    }
-
     public void removeLesson(Lesson lesson){
         this.lessons.remove(lesson);
         lesson.setGroup(null);
@@ -103,41 +90,5 @@ public class Group {
     public void addLesson(Lesson lesson){
         this.lessons.add(lesson);
         lesson.setGroup(this);
-    }
-
-    public void setLessons(List<Lesson> lessons) {
-        this.lessons = lessons;
-    }
-
-    public List<Lesson> getLessons() {
-        return this.lessons;
-    }
-
-    public Long getId(){
-        return this.id;
-    }
-
-    public void setCoursePart(CoursePart part){
-        this.coursePart = part;
-    }
-
-    public CoursePart getCoursePart(){
-        return this.coursePart;
-    }
-
-    public void setCode(String code){
-        this.code = code;
-    }
-
-    public String getCode(){
-        return this.code;
-    }
-
-    public AppUser getUser(){
-        return this.user;
-    }
-
-    public void setUser(AppUser user){
-        this.user = user;
     }
 }

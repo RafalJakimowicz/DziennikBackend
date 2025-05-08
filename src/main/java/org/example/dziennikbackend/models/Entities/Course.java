@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter @Setter
 @Entity
 @Table(name = "courses")
 public class Course {
@@ -37,14 +40,6 @@ public class Course {
         this.ects = ects;
     }
 
-    public void setCourseEditions(List<CourseEdition> courseEditions) {
-        this.courseEditions = courseEditions;
-    }
-
-    public List<CourseEdition> getCourseEditions() {
-        return courseEditions;
-    }
-
     public void AddCourseEdition(CourseEdition courseEdition) {
         this.courseEditions.add(courseEdition);
         courseEdition.setCourse(this);
@@ -53,33 +48,5 @@ public class Course {
     public void RemoveCourseEdition(CourseEdition courseEdition) {
         this.courseEditions.remove(courseEdition);
         courseEdition.setCourse(null);
-    }
-
-    public Long getId(){
-        return this.id;
-    }
-
-    public void setName(String name){
-        this.name = name;
-    }
-
-    public String getName(){
-        return this.name;
-    }
-
-    public void setCode(String code){
-        this.code = code;
-    }
-
-    public String getCode(){
-        return this.code;
-    }
-
-    public void setEcts(Long ects){
-        this.ects = ects;
-    }
-
-    public Long getEcts(){
-        return this.ects;
     }
 }

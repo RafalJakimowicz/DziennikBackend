@@ -3,6 +3,8 @@ package org.example.dziennikbackend.models.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.List;
 import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;
 
+@Getter @Setter
 @Entity
 @Table(name = "majors")
 public class Major {
@@ -29,38 +32,6 @@ public class Major {
     public Major(String name, String shortName) {
         this.name = name;
         this.shortName = shortName;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    public String getShortName() {
-        return this.shortName;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setName(String name){
-        this.name = name;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public List<Student> getStudents() {
-        return this.students;
-    }
-
-    public void setStudents(List<Student> students) {
-        this.students = students;
     }
 
     public void addStudent(Student student){

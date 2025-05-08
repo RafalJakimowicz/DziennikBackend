@@ -3,6 +3,8 @@ package org.example.dziennikbackend.models.Entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -11,6 +13,7 @@ import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+@Getter @Setter
 @Entity
 @Table(name = "semesters")
 public class Semester {
@@ -41,10 +44,6 @@ public class Semester {
         this.end_date = end_date;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void removeCourseEdition(CourseEdition edition){
         this.courseEditions.add(edition);
         edition.setSemester(this);
@@ -53,41 +52,5 @@ public class Semester {
     public void addCourseEdition(CourseEdition edition){
         this.courseEditions.add(edition);
         edition.setSemester(this);
-    }
-
-    public void setCourseEditions(List<CourseEdition> courseEditions) {
-        this.courseEditions = courseEditions;
-    }
-
-    public List<CourseEdition> getCourseEditions() {
-        return this.courseEditions;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
-    public LocalDateTime getStart() {
-        return this.start_date;
-    }
-
-    public void setStart(LocalDateTime start_date) {
-        this.start_date = start_date;
-    }
-
-    public LocalDateTime getEnd() {
-        return this.end_date;
-    }
-
-    public void setEnd(LocalDateTime end_date) {
-        this.end_date = end_date;
     }
 }

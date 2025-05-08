@@ -5,10 +5,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter @Setter
 @Entity
 @Table(name = "grades")
 public class Grade {
@@ -50,57 +53,5 @@ public class Grade {
         this.comment = comment;
         this.user = user;
         this.date = date;
-    }
-
-    public void setGroup(Group group) {
-        this.group = group;
-    }
-
-    public Group getGroup() {
-        return this.group;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public Student getStudent() {
-        return this.student;
-    }
-
-    public void setScore(BigDecimal score) {
-        this.score = score;
-    }
-
-    public BigDecimal getScore() {
-        return this.score;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public String getComment() {
-        return this.comment;
-    }
-
-    public void setUser(AppUser user) {
-        this.user = user;
-    }
-
-    public AppUser getUser() {
-        return this.user;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    public LocalDateTime getDate() {
-        return this.date;
     }
 }

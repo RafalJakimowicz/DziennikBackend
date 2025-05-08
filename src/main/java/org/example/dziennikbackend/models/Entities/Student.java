@@ -2,6 +2,8 @@ package org.example.dziennikbackend.models.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.dziennikbackend.models.Enums.StudentStatus;
 
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+@Getter @Setter
 @Entity
 @Table(name = "students")
 public class Student {
@@ -88,43 +91,4 @@ public class Student {
         studentInGroups.remove(sg);
         sg.setStudent(null);
     }
-
-    /* ──────────────────── gettery / settery ──────────────────── */
-    public Long getId() {return id;}
-
-    public String getName() {return name;}
-
-    public void setName(String name) {this.name = name;}
-
-    public String getSurname() {return surname;}
-
-    public void setSurname(String surname) {this.surname = surname;}
-
-    public Integer getAlbumNumber() {return albumNumber;}
-
-    public void setAlbumNumber(Integer albumNumber) {this.albumNumber = albumNumber;}
-
-    public Major getMajor() {return major;}
-
-    public void setMajor(Major major) {this.major = major;}
-
-    public Integer getYear() {return year;}
-
-    public void setYear(Integer year) {this.year = year;}
-
-    public StudentStatus getStudentStatus() {return studentStatus;}
-
-    public void setStudentStatus(StudentStatus studentStatus) {this.studentStatus = studentStatus;}
-
-    public List<StudentInGroup> getStudentInGroups() {return studentInGroups;}
-
-    public void setStudentInGroups(List<StudentInGroup> studentInGroups) {this.studentInGroups = studentInGroups;}
-
-    public List<Grade> getGrades() {return grades;}
-
-    public void setGrades(List<Grade> grades) {this.grades = grades;}
-
-    public List<Attendance> getAttendances() {return attendances;}
-
-    public void setAttendances(List<Attendance> attendances) {this.attendances = attendances;}
 }
