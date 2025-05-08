@@ -1,5 +1,6 @@
 package org.example.dziennikbackend.controllers;
 
+import org.example.dziennikbackend.models.DTOs.MajorDTO;
 import org.example.dziennikbackend.models.Entities.Major;
 import org.example.dziennikbackend.services.MajorService;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +17,17 @@ public class MajorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Major>> getAllMajors() {
-        List<Major> majors = majorService.getAllMajors();
+    public ResponseEntity<List<MajorDTO>> getAllMajors() {
+        List<MajorDTO> majors = majorService.getAllMajors();
         if (majors.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(majors);
     }
 
-    @GetMapping("/{shortName}")
-    public ResponseEntity<Major> getMajorById(@PathVariable String shortName) {
-        Major major = majorService.getMajorByShortName(shortName);
+    @GetMapping("/{id}")
+    public ResponseEntity<MajorDTO> getMajorById(@PathVariable Long id) {
+        MajorDTO major = majorService.getMajorById(id);
         if (major == null) {
             return ResponseEntity.notFound().build();
         }
@@ -34,26 +35,26 @@ public class MajorController {
     }
 
     @PostMapping
-    public ResponseEntity<Major> createMajor(@RequestBody Major major) {
-        Major newMajor = majorService.createMajor(major);
+    public ResponseEntity<MajorDTO> createMajor(@RequestBody MajorDTO major) {
+        MajorDTO newMajor = majorService.createMajor(major);
         if (newMajor == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(newMajor);
     }
 
-    @PutMapping("/{shortName}")
-    public ResponseEntity<Major> updateMajor(@PathVariable String shortName, @RequestBody Major major) {
-        Major updatedMajor = majorService.updateMajor(shortName, major);
+    @PutMapping("/{id}")
+    public ResponseEntity<MajorDTO> updateMajor(@PathVariable Long id, @RequestBody MajorDTO major) {
+        MajorDTO updatedMajor = majorService.updateMajor(id, major);
         if (updatedMajor == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedMajor);
     }
 
-    @DeleteMapping("/{shortName}")
-    public ResponseEntity<Major> deleteMajor(@PathVariable String shortName) {
-        majorService.deleteMajor(shortName);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMajor(@PathVariable Long id) {
+        majorService.deleteMajor(id);
         return ResponseEntity.noContent().build();
     }
 }
