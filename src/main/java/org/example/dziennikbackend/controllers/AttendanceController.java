@@ -16,13 +16,13 @@ public class AttendanceController {
     }
 
     @PostMapping
-    public ResponseEntity<Attendance> createAttendance(@RequestBody AttendanceDTO attendance) {
+    public ResponseEntity<AttendanceDTO> createAttendance(@RequestBody AttendanceDTO attendance) {
         return ResponseEntity.ok(attendanceService.createAttendance(attendance));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Attendance> updateAttendance(@PathVariable Long id, @RequestBody AttendanceDTO attendance) {
-        Attendance upadatedAttendance = attendanceService.updateAttendance(id, attendance);
+    public ResponseEntity<AttendanceDTO> updateAttendance(@PathVariable Long id, @RequestBody AttendanceDTO attendance) {
+        AttendanceDTO upadatedAttendance = attendanceService.updateAttendance(id, attendance);
         if (upadatedAttendance != null) {
             return ResponseEntity.ok(upadatedAttendance);
         }
@@ -30,8 +30,8 @@ public class AttendanceController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<Attendance> updateAttendanceStatus(@PathVariable Long id, @RequestParam AttendanceStatusDTO status) {
-        Attendance updated = attendanceService.updateAttendanceStatus(id, status.getAttendanceStatus());
+    public ResponseEntity<AttendanceDTO> updateAttendanceStatus(@PathVariable Long id, @RequestParam AttendanceStatusDTO status) {
+        AttendanceDTO updated = attendanceService.updateAttendanceStatus(id, status.getAttendanceStatus());
         if (updated != null) {
             return ResponseEntity.ok(updated);
         }
@@ -39,7 +39,7 @@ public class AttendanceController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Attendance> deleteAttendance(@PathVariable Long id) {
+    public ResponseEntity<AttendanceDTO> deleteAttendance(@PathVariable Long id) {
         attendanceService.deleteAttendance(id);
         return ResponseEntity.noContent().build();
     }

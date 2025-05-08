@@ -23,19 +23,36 @@ public class AttendanceService {
         this.appUserRepository = appUserRepository;
     }
 
-    @Transactional
-    public Attendance createAttendance(AttendanceDTO attendanceDTO) {
+    private AttendanceDTO changeObjectToDTO(Attendance attendance) {
+        AttendanceDTO attendanceDTO = new AttendanceDTO();
+        attendanceDTO.setId(attendance.getId());
+        attendanceDTO.setStudentId(attendance.getStudent().getId());
+        attendanceDTO.setLessonId(attendance.getLesson().getId());
+        attendanceDTO.setStatus(attendance.getStatus());
+        attendanceDTO.setDate(attendance.getDate());
+        attendanceDTO.setUserId(attendance.getUser().getId());
+        return attendanceDTO;
+    }
+
+    private Attendance changeDTOToObject(AttendanceDTO attendanceDTO) {
         Attendance attendance = new Attendance();
         attendance.setLesson(lessonRepository.getReferenceById(attendanceDTO.getLessonId()));
         attendance.setStudent(studentRepository.getReferenceById(attendanceDTO.getStudentId()));
         attendance.setUser(appUserRepository.getReferenceById(attendanceDTO.getUserId()));
         attendance.setStatus(attendanceDTO.getStatus());
         attendance.setDate(attendanceDTO.getDate());
-        return attendanceRepository.save(attendance);
+        attendance.setId(attendanceDTO.getId());
+        return attendance;
     }
 
     @Transactional
-    public Attendance updateAttendance(Long id, AttendanceDTO attendanceDTO) {
+    public AttendanceDTO createAttendance(AttendanceDTO attendanceDTO) {
+        Attendance attendance = attendanceRepository.save(changeDTOToObject(attendanceDTO));
+        return changeObjectToDTO(attendance);
+    }
+
+    @Transactional
+    public AttendanceDTO updateAttendance(Long id, AttendanceDTO attendanceDTO) {
         Attendance toUpdate = attendanceRepository.findById(id).orElse(null);
         if (toUpdate != null) {
             if (attendanceDTO.getLessonId() != null) {
@@ -53,20 +70,20 @@ public class AttendanceService {
             if (attendanceDTO.getDate() != null) {
                 toUpdate.setDate(attendanceDTO.getDate());
             }
-            return attendanceRepository.save(toUpdate);
+            return changeObjectToDTO(attendanceRepository.save(toUpdate));
         } else {
             return null;
         }
     }
 
     @Transactional
-    public Attendance updateAttendanceStatus(Long id, AttendanceStatus status) {
+    public AttendanceDTO updateAttendanceStatus(Long id, AttendanceStatus status) {
         Attendance toUpdate = attendanceRepository.findById(id).orElse(null);
         if (toUpdate != null) {
             if (status != null) {
                 toUpdate.setStatus(status);
             }
-            return attendanceRepository.save(toUpdate);
+            return changeObjectToDTO(attendanceRepository.save(toUpdate));
         }
         return null;
     }
