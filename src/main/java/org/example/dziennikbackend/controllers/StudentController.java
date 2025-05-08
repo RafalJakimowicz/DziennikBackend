@@ -18,17 +18,17 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Student>> getAllStudents() {
-        List<Student> students = studentService.getAllStudents();
+    public ResponseEntity<List<StudentDTO>> getAllStudents() {
+        List<StudentDTO> students = studentService.getAllStudents();
         if (students.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(studentService.getAllStudents());
+        return ResponseEntity.ok(students);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
-        Student student = studentService.getStudentById(id);
+    public ResponseEntity<StudentDTO> getStudentById(@PathVariable Long id) {
+        StudentDTO student = studentService.getStudentById(id);
         if (student == null) {
             return ResponseEntity.notFound().build();
         }
@@ -36,13 +36,13 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@RequestBody StudentDTO student) {
+    public ResponseEntity<StudentDTO> createStudent(@RequestBody StudentDTO student) {
         return ResponseEntity.ok(studentService.createStudent(student));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody StudentDTO student) {
-        Student updatedStudent = studentService.updateStudent(id, student);
+    public ResponseEntity<StudentDTO> updateStudent(@PathVariable Long id, @RequestBody StudentDTO student) {
+        StudentDTO updatedStudent = studentService.updateStudent(id, student);
         if (updatedStudent == null) {
             return ResponseEntity.notFound().build();
         }
@@ -50,7 +50,7 @@ public class StudentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Student> deleteStudent(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }

@@ -7,6 +7,7 @@ import org.example.dziennikbackend.repositories.MajorRepository;
 import org.example.dziennikbackend.repositories.StudentRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,30 +19,57 @@ public class StudentService {
         this.majorRepository = majorRepository;
     }
 
-    @Transactional
-    public Student createStudent(StudentDTO student) {
-        Student newStudent = new Student();
-        newStudent.setName(student.getName());
-        newStudent.setSurname(student.getSurname());
-        newStudent.setAlbumNumber(student.getAlbumNumber());
-        newStudent.setStudentStatus(student.getStudentStatus());
-        newStudent.setMajor(majorRepository.getReferenceById(student.getMajorId()));
-        newStudent.setYear(student.getYear());
-        return studentRepository.save(newStudent);
+    private StudentDTO changeObjectToDTO(Student student) {
+        StudentDTO studentDTO = new StudentDTO();
+        studentDTO.setId(student.getId());
+        studentDTO.setName(student.getName());
+        studentDTO.setSurname(student.getSurname());
+        studentDTO.setStudentStatus(student.getStudentStatus());
+        studentDTO.setYear(student.getYear());
+        studentDTO.setAlbumNumber(student.getAlbumNumber());
+        studentDTO.setMajorId(student.getMajor().getId());
+        return studentDTO;
+    }
+
+    private Student changeDTOToObject(StudentDTO studentDTO) {
+        Student student = new Student();
+        student.setId(studentDTO.getId());
+        student.setName(studentDTO.getName());
+        student.setSurname(studentDTO.getSurname());
+        student.setStudentStatus(studentDTO.getStudentStatus());
+        student.setYear(studentDTO.getYear());
+        student.setAlbumNumber(studentDTO.getAlbumNumber());
+        student.setMajor(majorRepository.getReferenceById(studentDTO.getMajorId()));
+        return student;
     }
 
     @Transactional
-    public Student getStudentById(Long id) {
-        return studentRepository.findById(id).orElse(null);
+    public StudentDTO createStudent(StudentDTO student) {
+        return changeObjectToDTO(studentRepository.save(changeDTOToObject(student)));
     }
 
     @Transactional
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public StudentDTO getStudentById(Long id) {
+        Student student = studentRepository.findById(id).orElse(null);
+        if (student == null) {
+            return null;
+        } else {
+            return changeObjectToDTO(student);
+        }
     }
 
     @Transactional
-    public Student updateStudent(Long id,StudentDTO student) {
+    public List<StudentDTO> getAllStudents() {
+        List<Student> students = studentRepository.findAll();
+        List<StudentDTO> studentDTOS = new ArrayList<>();
+        for (Student student : students) {
+            studentDTOS.add(changeObjectToDTO(student));
+        }
+        return studentDTOS;
+    }
+
+    @Transactional
+    public StudentDTO updateStudent(Long id,StudentDTO student) {
         Student toUpdate = studentRepository.findById(id).orElse(null);
         if (toUpdate != null) {
             if(student.getName() != null) {
@@ -62,7 +90,7 @@ public class StudentService {
             if(student.getMajorId() != null) {
                 toUpdate.setMajor(majorRepository.getReferenceById(student.getMajorId()));
             }
-            return studentRepository.save(toUpdate);
+            return changeObjectToDTO(studentRepository.save(toUpdate));
         } else {
             return null;
         }
