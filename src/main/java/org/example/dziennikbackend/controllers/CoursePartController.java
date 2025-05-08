@@ -26,8 +26,8 @@ public class CoursePartController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CoursePart> getCoursePartById(@PathVariable Long id) {
-        CoursePart coursePart = coursePartService.findById(id);
+    public ResponseEntity<CoursePartDTO> getCoursePartById(@PathVariable Long id) {
+        CoursePartDTO coursePart = coursePartService.findById(id);
         if (coursePart == null) {
             return ResponseEntity.notFound().build();
         }
@@ -35,8 +35,8 @@ public class CoursePartController {
     }
 
     @PostMapping
-    public ResponseEntity<CoursePart> createCoursePart(@RequestBody CoursePartDTO coursePart) {
-        CoursePart newPart = coursePartService.create(coursePart);
+    public ResponseEntity<CoursePartDTO> createCoursePart(@RequestBody CoursePartDTO coursePart) {
+        CoursePartDTO newPart = coursePartService.create(coursePart);
         if (newPart == null) {
             return ResponseEntity.notFound().build();
         }
@@ -44,8 +44,8 @@ public class CoursePartController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CoursePart> updateCoursePart(@PathVariable Long id, @RequestBody CoursePartDTO coursePart) {
-        CoursePart updated = coursePartService.updateCoursePart(id, coursePart);
+    public ResponseEntity<CoursePartDTO> updateCoursePart(@PathVariable Long id, @RequestBody CoursePartDTO coursePart) {
+        CoursePartDTO updated = coursePartService.updateCoursePart(id, coursePart);
         if (updated == null) {
             return ResponseEntity.notFound().build();
         }
