@@ -1,8 +1,7 @@
 package org.example.dziennikbackend.controllers;
 
+import org.example.dziennikbackend.models.DTOs.AttendanceDTO;
 import org.example.dziennikbackend.models.DTOs.LessonDTO;
-import org.example.dziennikbackend.models.Entities.Attendance;
-import org.example.dziennikbackend.models.Entities.Lesson;
 import org.example.dziennikbackend.services.LessonService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +17,8 @@ public class LessonController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Lesson>> getAllLessons() {
-        List<Lesson> lessons = lessonService.getAllLessons();
+    public ResponseEntity<List<LessonDTO>> getAllLessons() {
+        List<LessonDTO> lessons = lessonService.getAllLessons();
         if (lessons.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -27,8 +26,8 @@ public class LessonController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Lesson> getLessonById(@PathVariable Long id) {
-        Lesson lesson = lessonService.getLessonById(id);
+    public ResponseEntity<LessonDTO> getLessonById(@PathVariable Long id) {
+        LessonDTO lesson = lessonService.getLessonById(id);
         if (lesson == null) {
             return ResponseEntity.notFound().build();
         }
@@ -36,12 +35,12 @@ public class LessonController {
     }
 
     @PostMapping
-    public ResponseEntity<Lesson> createLesson(@RequestBody LessonDTO lesson) {
+    public ResponseEntity<LessonDTO> createLesson(@RequestBody LessonDTO lesson) {
         return ResponseEntity.ok(lessonService.createLesson(lesson));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Lesson> updateLesson(@PathVariable Long id, @RequestBody LessonDTO lesson) {
+    public ResponseEntity<LessonDTO> updateLesson(@PathVariable Long id, @RequestBody LessonDTO lesson) {
         return ResponseEntity.ok(lessonService.updateLesson(id, lesson));
     }
 
@@ -52,8 +51,8 @@ public class LessonController {
     }
 
     @GetMapping("/{id}/attendances")
-    public ResponseEntity<List<Attendance>> getLessonAttendances(@PathVariable Long id) {
-        List<Attendance> attendances = lessonService.getLessonAttendances(id);
+    public ResponseEntity<List<AttendanceDTO>> getLessonAttendances(@PathVariable Long id) {
+        List<AttendanceDTO> attendances = lessonService.getLessonAttendances(id);
         if (attendances.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
