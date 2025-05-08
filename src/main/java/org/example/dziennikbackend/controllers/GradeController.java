@@ -15,13 +15,13 @@ public class GradeController {
     }
 
     @PostMapping
-    public ResponseEntity<Grade> createGrade(@RequestBody GradeDTO grade) {
+    public ResponseEntity<GradeDTO> createGrade(@RequestBody GradeDTO grade) {
         return ResponseEntity.ok(gradeService.createGrade(grade));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Grade> updateGrade(@PathVariable Long id, @RequestBody GradeDTO grade) {
-        Grade updated = gradeService.updateGrade(id, grade);
+    public ResponseEntity<GradeDTO> updateGrade(@PathVariable Long id, @RequestBody GradeDTO grade) {
+        GradeDTO updated = gradeService.updateGrade(id, grade);
         if (updated == null) {
             return ResponseEntity.notFound().build();
         }

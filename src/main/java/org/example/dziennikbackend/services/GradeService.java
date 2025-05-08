@@ -22,20 +22,37 @@ public class GradeService {
         this.appUserRepository = appUserRepository;
     }
 
-    @Transactional
-    public Grade createGrade(GradeDTO gradeDTO) {
+    private GradeDTO changeObjectToDTO(Grade grade) {
+        GradeDTO gradeDTO = new GradeDTO();
+        gradeDTO.setId(grade.getId());
+        gradeDTO.setComment(grade.getComment());
+        gradeDTO.setDate(grade.getDate());
+        gradeDTO.setScore(grade.getScore());
+        gradeDTO.setStudentId(grade.getStudent().getId());
+        gradeDTO.setGroupId(grade.getGroup().getId());
+        gradeDTO.setUserId(grade.getUser().getId());
+        return gradeDTO;
+    }
+
+    private Grade changeDTOToObject(GradeDTO gradeDTO) {
         Grade grade = new Grade();
-        grade.setDate(gradeDTO.getDate());
-        grade.setStudent(studentRepository.getReferenceById(gradeDTO.getStudentId()));
-        grade.setGroup(groupRepository.getReferenceById(gradeDTO.getGroupId()));
+        grade.setId(gradeDTO.getId());
         grade.setComment(gradeDTO.getComment());
-        grade.setUser(appUserRepository.getReferenceById(gradeDTO.getUserId()));
+        grade.setDate(gradeDTO.getDate());
         grade.setScore(gradeDTO.getScore());
-        return gradeRepository.save(grade);
+        grade.setUser(appUserRepository.getReferenceById(gradeDTO.getUserId()));
+        grade.setGroup(groupRepository.getReferenceById(gradeDTO.getGroupId()));
+        grade.setStudent(studentRepository.getReferenceById(gradeDTO.getStudentId()));
+        return grade;
     }
 
     @Transactional
-    public Grade updateGrade(Long id, GradeDTO gradeDTO) {
+    public GradeDTO createGrade(GradeDTO gradeDTO) {
+        return changeObjectToDTO(gradeRepository.save(changeDTOToObject(gradeDTO)));
+    }
+
+    @Transactional
+    public GradeDTO updateGrade(Long id, GradeDTO gradeDTO) {
         Grade toUpdate = gradeRepository.findById(id).orElse(null);
         if (toUpdate != null) {
             if (gradeDTO.getComment() != null) {
@@ -56,7 +73,7 @@ public class GradeService {
             if (gradeDTO.getDate() != null) {
                 toUpdate.setDate(gradeDTO.getDate());
             }
-            return gradeRepository.save(toUpdate);
+            return changeObjectToDTO(gradeRepository.save(toUpdate));
         } else {
             return null;
         }
