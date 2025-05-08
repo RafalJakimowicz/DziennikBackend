@@ -1,11 +1,9 @@
 package org.example.dziennikbackend.controllers;
 
+import org.example.dziennikbackend.models.DTOs.GradeDTO;
 import org.example.dziennikbackend.models.DTOs.GroupDTO;
+import org.example.dziennikbackend.models.DTOs.StudentDTO;
 import org.example.dziennikbackend.models.DTOs.StudentInGroupDTO;
-import org.example.dziennikbackend.models.Entities.Grade;
-import org.example.dziennikbackend.models.Entities.Group;
-import org.example.dziennikbackend.models.Entities.Student;
-import org.example.dziennikbackend.models.Entities.StudentInGroup;
 import org.example.dziennikbackend.services.GroupService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +19,13 @@ public class GroupController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Group>> getAllGroups() {
+    public ResponseEntity<List<GroupDTO>> getAllGroups() {
         return ResponseEntity.ok(groupService.getAllGroups());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Group> getGroupById(@PathVariable Long id) {
-        Group group = groupService.getGroupById(id);
+    public ResponseEntity<GroupDTO> getGroupById(@PathVariable Long id) {
+        GroupDTO group = groupService.getGroupById(id);
         if (group == null) {
             return ResponseEntity.notFound().build();
         }
@@ -35,8 +33,8 @@ public class GroupController {
     }
 
     @PostMapping
-    public ResponseEntity<Group> createGroup(@RequestBody GroupDTO group) {
-        Group groupCreated = groupService.createGroup(group);
+    public ResponseEntity<GroupDTO> createGroup(@RequestBody GroupDTO group) {
+        GroupDTO groupCreated = groupService.createGroup(group);
         if (groupCreated == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -44,8 +42,8 @@ public class GroupController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Group> updateGroup(@PathVariable Long id, @RequestBody GroupDTO group) {
-        Group groupUpdated = groupService.updateGroup(id, group);
+    public ResponseEntity<GroupDTO> updateGroup(@PathVariable Long id, @RequestBody GroupDTO group) {
+        GroupDTO groupUpdated = groupService.updateGroup(id, group);
         if (groupUpdated == null) {
             return ResponseEntity.notFound().build();
         }
@@ -53,14 +51,14 @@ public class GroupController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Group> deleteGroup(@PathVariable Long id) {
+    public ResponseEntity<GroupDTO> deleteGroup(@PathVariable Long id) {
         groupService.deleteGroup(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/students")
-    public ResponseEntity<List<Student>> getStudentsByGroup(@PathVariable Long id) {
-        List<Student> students = groupService.getStudentsInGroup(id);
+    public ResponseEntity<List<StudentDTO>> getStudentsByGroup(@PathVariable Long id) {
+        List<StudentDTO> students = groupService.getStudentsInGroup(id);
         if (students.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -68,8 +66,8 @@ public class GroupController {
     }
 
     @PostMapping("/students")
-    public ResponseEntity<StudentInGroup> addStudentToGroup(@RequestBody StudentInGroupDTO studentInGroupDTO) {
-        StudentInGroup added = groupService.addStudentToGroup(studentInGroupDTO);
+    public ResponseEntity<StudentInGroupDTO> addStudentToGroup(@RequestBody StudentInGroupDTO studentInGroupDTO) {
+        StudentInGroupDTO added = groupService.addStudentToGroup(studentInGroupDTO);
         return ResponseEntity.ok(added);
     }
 
@@ -80,7 +78,7 @@ public class GroupController {
     }
 
     @GetMapping("/{id}/grades")
-    public ResponseEntity<List<Grade>> getGradesByGroup(@PathVariable Long id) {
+    public ResponseEntity<List<GradeDTO>> getGradesByGroup(@PathVariable Long id) {
         return ResponseEntity.ok(groupService.getGradesInGroup(id));
     }
 }
