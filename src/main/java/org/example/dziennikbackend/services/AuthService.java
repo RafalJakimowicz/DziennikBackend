@@ -41,7 +41,7 @@ public class AuthService {
         user.setName(userDTO.getName());
         user.setSurname(userDTO.getSurname());
         user.setLogin(userDTO.getLogin());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setPassword(userDTO.getPassword());
         return user;
     }
 
@@ -51,7 +51,7 @@ public class AuthService {
         if (user.isEmpty()) {
             return null;
         }
-        if (!passwordEncoder.matches(authDTO.getPassword(), user.get().getPassword())){
+        if (!passwordEncoder.matches(authDTO.getPassword(), user.get().getPassword())) {
             return null;
         }
         return changeUserToDTO(user.get());
@@ -63,7 +63,7 @@ public class AuthService {
         if (newUser.isPresent()) {
             return null;
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.get().setPassword(passwordEncoder.encode(user.getPassword()));
         newUser = Optional.of(appUserRepository.save(changeUserToEntity(user)));
         return changeUserToDTO(newUser.get());
     }

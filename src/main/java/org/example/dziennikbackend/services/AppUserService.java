@@ -37,7 +37,7 @@ public class AppUserService {
         user.setName(userDTO.getName());
         user.setSurname(userDTO.getSurname());
         user.setLogin(userDTO.getLogin());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setPassword(userDTO.getPassword());
         return user;
     }
 
@@ -66,6 +66,7 @@ public class AppUserService {
     @Transactional
     public AppUserDTO createUser(AppUserDTO user){
         AppUser appUser = changeUserToEntity(user);
+        appUser.setPassword(passwordEncoder.encode(user.getPassword()));
         AppUser newUser = appUserRepository.save(appUser);
         newUser.setPassword(null);
         return changeUserToDTO(newUser);
