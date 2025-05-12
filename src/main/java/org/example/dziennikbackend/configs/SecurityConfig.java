@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
@@ -27,10 +28,13 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http,
                                     JwtRequestFilter jwtRequestFilter,
-                                    JpaUserDetailsService uds)       // <─ inject here
+                                    JpaUserDetailsService uds,
+                                    CorsConfigurationSource corsConfigurationSource)       // <─ inject here
             throws Exception {
 
-        http.userDetailsService(uds).csrf(csrf -> csrf.disable())
+        http.userDetailsService(uds)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/public/auth/**").permitAll()
                         .anyRequest().authenticated()
