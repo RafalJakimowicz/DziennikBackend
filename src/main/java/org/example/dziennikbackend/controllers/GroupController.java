@@ -32,6 +32,16 @@ public class GroupController {
         return ResponseEntity.ok(group);
     }
 
+    @GetMapping("my/{uId}")
+    public ResponseEntity<List<GroupDTO>> getMyGroups(@PathVariable Long uId) {
+        List<GroupDTO> groups = groupService.getGroupsByUserId(uId);
+        if (groups == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(groups);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<GroupDTO> createGroup(@RequestBody GroupDTO group) {
         GroupDTO groupCreated = groupService.createGroup(group);

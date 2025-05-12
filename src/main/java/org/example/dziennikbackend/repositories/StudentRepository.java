@@ -16,7 +16,7 @@ import java.util.Optional;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-    @Query(value = "SELECT s.* FROM students AS s JOIN students_in_groups AS sg ON s.id = sg.student_id WHERE sg.id = :groupId", nativeQuery = true)
+    @Query(value = "SELECT s.* FROM students AS s JOIN students_in_groups AS sg ON s.id = sg.student_id WHERE sg.group_id = :groupId", nativeQuery = true)
     List<Student> findStudentsInGroup(@Param ("groupId") Long groupId);
 
 

@@ -144,6 +144,20 @@ public class GroupService {
     }
 
     @Transactional
+    public List<GroupDTO> getGroupsByUserId(Long userId){
+        List<Group> groups = groupRepository.findByUserId(userId);
+        if(groups.isEmpty()){
+            return null;
+        } else {
+            List<GroupDTO> groupDTOS = new ArrayList<>();
+            for(Group group : groups){
+                groupDTOS.add(changeObjectToDTO(group));
+            }
+            return groupDTOS;
+        }
+    }
+
+    @Transactional
     public void deleteStudentFromGroup(Long sId, Long gId) {
         List<StudentInGroup> sig = studentInGroupRepository.findAllByGroupId(gId);
         for (StudentInGroup studentInGroup : sig) {
