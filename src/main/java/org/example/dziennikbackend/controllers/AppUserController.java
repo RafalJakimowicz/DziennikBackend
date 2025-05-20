@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/private/users")
+@CrossOrigin("http://localhost:4200")
 public class AppUserController {
     private final AppUserService appUserService;
     private final AuthService authService;

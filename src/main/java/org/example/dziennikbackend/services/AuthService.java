@@ -63,8 +63,8 @@ public class AuthService {
         if (newUser.isPresent()) {
             return null;
         }
-        newUser.get().setPassword(passwordEncoder.encode(user.getPassword()));
         newUser = Optional.of(appUserRepository.save(changeUserToEntity(user)));
+        newUser.get().setPassword(passwordEncoder.encode(user.getPassword()));
         return changeUserToDTO(newUser.get());
     }
 

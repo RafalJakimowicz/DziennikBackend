@@ -11,6 +11,8 @@ import java.util.List;
 @Repository
 public interface GradeRepository extends JpaRepository<Grade, Long> {
 
-    @Query(value = "SELECT g.* FROM grades AS g JOIN groups AS gr ON g.group_id = gr.id WHERE gr.id = :groupId", nativeQuery = true)
-    List<Grade> getGradesByGroupId(@Param("groupId") Long groupId);
+    //@Query(value = "SELECT g.* FROM grades AS g JOIN groups AS gr ON g.group_id = gr.id WHERE gr.id = :groupId", nativeQuery = true)
+    //List<Grade> getGradesByGroupId(@Param("groupId") Long groupId);
+
+    List<Grade> getGradesByGroupId(Long id);
 }
