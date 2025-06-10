@@ -67,7 +67,8 @@ public class AppUser {
         this.grades = grade;
     }
 
-    public List<Grade> getGrade() {
+    @JsonIgnore
+    public List<Grade> getGrades() {
         return this.grades;
     }
 
