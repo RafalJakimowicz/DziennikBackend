@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.example.dziennikbackend.models.DTOs.AppUserDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
 import org.example.dziennikbackend.repositories.AppUserRepository;
+import org.example.dziennikbackend.utils.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,11 +54,11 @@ public class AppUserService {
     }
 
     @Transactional
-    public AppUserDTO getUserById(Long id){
+    public AppUserDTO getUserById(Long id) throws ResourceNotFoundException {
         Optional<AppUser> user = appUserRepository.findById(id);
         AppUser appUser = user.orElse(null);
         if(appUser == null){
-            return null;
+            throw new ResourceNotFoundException("Get User: " + id.toString());
         }
         appUser.setPassword(null);
         return changeUserToDTO(appUser);
@@ -73,10 +74,10 @@ public class AppUserService {
     }
 
     @Transactional
-    public AppUserDTO updateUser(Long id, AppUserDTO user){
+    public AppUserDTO updateUser(Long id, AppUserDTO user) throws ResourceNotFoundException {
         Optional<AppUser> userOptional = appUserRepository.findById(id);
         if(userOptional.isEmpty()){
-            return null;
+            throw new ResourceNotFoundException("Update User: " + id.toString());
         }
         if (user.getLogin() != null) {
             userOptional.get().setLogin(user.getLogin());
@@ -93,13 +94,13 @@ public class AppUserService {
     }
 
     @Transactional
-    public AppUserDTO updatePassword(Long id, String oldPassword, String newPassword){
+    public AppUserDTO updatePassword(Long id, String oldPassword, String newPassword) throws ResourceNotFoundException {
         if (oldPassword == null || passwordEncoder.matches(newPassword, oldPassword) || newPassword == null){
             return null;
         }
         Optional<AppUser> userOptional = appUserRepository.findById(id);
         if(userOptional.isEmpty()){
-            return null;
+            throw new ResourceNotFoundException("Update User Password: " + id.toString());
         }
         AppUser user = userOptional.get();
         user.setPassword(passwordEncoder.encode(newPassword));

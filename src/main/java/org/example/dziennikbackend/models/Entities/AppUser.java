@@ -30,10 +30,6 @@ public class AppUser {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<CourseEdition> courseEditions = new ArrayList<>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Attendance> attendances = new ArrayList<>();
 
     @JsonIgnore
@@ -91,15 +87,5 @@ public class AppUser {
     public void addAttendance(Attendance attendance){
         this.attendances.add(attendance);
         attendance.setUser(this);
-    }
-
-    public void removeCourseEdition(CourseEdition edition){
-        this.courseEditions.remove(edition);
-        edition.setUser(null);
-    }
-
-    public void addCourseEdition(CourseEdition edition){
-        this.courseEditions.add(edition);
-        edition.setUser(this);
     }
 }
