@@ -19,7 +19,6 @@ public class Lesson {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="group_id")
-    @JsonIgnore
     private Group group;
 
     @Column(nullable = false)
@@ -38,7 +37,6 @@ public class Lesson {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
-    @JsonIgnore
     private List<Attendance> attendances = new ArrayList<>();
 
     public Lesson() {}

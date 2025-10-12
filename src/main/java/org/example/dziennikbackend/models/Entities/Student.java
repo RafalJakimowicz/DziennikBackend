@@ -15,8 +15,6 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Table(name = "students")
 public class Student {
-
-    /* ──────────────────── pola podstawowe ──────────────────── */
     @Id
     @GeneratedValue
     private Long id;
@@ -24,22 +22,9 @@ public class Student {
     private String name;
     private String surname;
 
-    @Column(unique = true, nullable = false, name = "album_number")
-    private Integer albumNumber;
+    @Column(unique = true, nullable = false, name = "index")
+    private Integer index;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "major_id")
-    @JsonIgnore                     // nie serializujemy Major w JSON‑ie
-    private Major major;
-
-    @Column(nullable = false)
-    private Integer year;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private StudentStatus studentStatus;
-
-    /* ──────────────────── relacje kolekcyjne ──────────────────── */
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
     @JsonIgnore
     private List<StudentInGroup> studentInGroups = new ArrayList<>();
@@ -52,16 +37,14 @@ public class Student {
     @JsonIgnore
     private List<Attendance> attendances = new ArrayList<>();
 
-    /* ──────────────────── konstruktory ──────────────────── */
     public Student() {}
 
-    public Student(String name, String surname, Integer albumNumber) {
+    public Student(String name, String surname, Integer index) {
         this.name = name;
         this.surname = surname;
-        this.albumNumber = albumNumber;
+        this.index = index;
     }
 
-    /* ──────────────────── metody pomocnicze relacji ──────────────────── */
     public void addAttendance(Attendance attendance) {
         attendances.add(attendance);
         attendance.setStudent(this);

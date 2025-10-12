@@ -15,8 +15,5 @@ public class StudentDTO {
     private Long id;
     private String name;
     private String surname;
-    private Integer albumNumber;
-    private Long majorId;
-    private Integer year;
-    private StudentStatus studentStatus;
+    private Integer index;
 }

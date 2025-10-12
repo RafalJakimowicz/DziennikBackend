@@ -16,6 +16,5 @@ public class LessonDTO {
     private Long groupId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private String subject;
     private String room;
 }

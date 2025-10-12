@@ -12,6 +12,5 @@ import lombok.Setter;
 public class CourseDTO {
     private Long id;
     private String name;
-    private String code;
-    private Long ects;
+    private Long userId;
 }

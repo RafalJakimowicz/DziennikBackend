@@ -34,15 +34,12 @@ public class Attendance {
     @JoinColumn(name="user_id")
     private AppUser user;
 
-    @Column(nullable = false)
-    private LocalDateTime date;
 
     public Attendance(){}
-    public Attendance(Lesson lesson, Student student, AttendanceStatus status, AppUser user, LocalDateTime date){
+    public Attendance(Lesson lesson, Student student, AttendanceStatus status, AppUser user){
         this.lesson = lesson;
         this.student = student;
         this.status = status;
         this.user = user;
-        this.date = date;
     }
 }

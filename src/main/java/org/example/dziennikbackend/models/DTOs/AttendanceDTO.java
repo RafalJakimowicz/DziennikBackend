@@ -14,16 +14,14 @@ public class AttendanceDTO {
     private Long studentId;
     private AttendanceStatus status;
     private Long userId;
-    private LocalDateTime date;
 
     public AttendanceDTO() {}
 
-    public AttendanceDTO(Long id,Long lessonId, Long studentId, AttendanceStatus status, Long userId, LocalDateTime date) {
+    public AttendanceDTO(Long id,Long lessonId, Long studentId, AttendanceStatus status, Long userId) {
         this.lessonId = lessonId;
         this.studentId = studentId;
         this.status = status;
         this.userId = userId;
-        this.date = date;
         this.id = id;
     }
 }
