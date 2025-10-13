@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.example.dziennikbackend.models.DTOs.AppUserDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
 import org.example.dziennikbackend.repositories.AppUserRepository;
+import org.example.dziennikbackend.utils.DTOMapper;
 import org.example.dziennikbackend.utils.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,34 +22,13 @@ public class AppUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    private AppUserDTO changeUserToDTO(AppUser user) {
-        AppUserDTO userDTO = new AppUserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setName(user.getName());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setSurname(user.getSurname());
-        userDTO.setLogin(user.getLogin());
-        return userDTO;
-    }
-
-    private AppUser changeUserToEntity(AppUserDTO userDTO) {
-        AppUser user = new AppUser();
-        user.setEmail(userDTO.getEmail());
-        user.setName(userDTO.getName());
-        user.setSurname(userDTO.getSurname());
-        user.setLogin(userDTO.getLogin());
-        user.setPassword(userDTO.getPassword());
-        return user;
-    }
-
     @Transactional
     public List<AppUserDTO> getAllUsers(){
         List<AppUser> users =  appUserRepository.findAll();
         List<AppUserDTO> userDTOs = new ArrayList<>();
         for (AppUser user : users) {
             user.setPassword(null);
-            userDTOs.add(changeUserToDTO(user));
+            userDTOs.add(DTOMapper.map(user, AppUserDTO.class));
         }
         return userDTOs;
     }
@@ -61,16 +41,16 @@ public class AppUserService {
             throw new ResourceNotFoundException("Get User: " + id.toString());
         }
         appUser.setPassword(null);
-        return changeUserToDTO(appUser);
+        return DTOMapper.map(appUser, AppUserDTO.class);
     }
 
     @Transactional
     public AppUserDTO createUser(AppUserDTO user){
-        AppUser appUser = changeUserToEntity(user);
+        AppUser appUser = DTOMapper.map(user, AppUser.class);
         appUser.setPassword(passwordEncoder.encode(user.getPassword()));
         AppUser newUser = appUserRepository.save(appUser);
         newUser.setPassword(null);
-        return changeUserToDTO(newUser);
+        return DTOMapper.map(newUser, AppUserDTO.class);
     }
 
     @Transactional
@@ -90,7 +70,7 @@ public class AppUserService {
         }
         AppUser savedUser = appUserRepository.save(userOptional.get());
         savedUser.setPassword(null);
-        return changeUserToDTO(savedUser);
+        return DTOMapper.map(savedUser, AppUserDTO.class);
     }
 
     @Transactional
@@ -106,7 +86,7 @@ public class AppUserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         AppUser updatedUser = appUserRepository.save(user);
         updatedUser.setPassword(null);
-        return changeUserToDTO(updatedUser);
+        return DTOMapper.map(updatedUser, AppUserDTO.class);
     }
 
     @Transactional

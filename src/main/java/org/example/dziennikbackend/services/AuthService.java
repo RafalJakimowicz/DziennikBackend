@@ -7,6 +7,8 @@ import org.example.dziennikbackend.models.DTOs.AuthDTO;
 import org.example.dziennikbackend.models.DTOs.JwtTokenDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
 import org.example.dziennikbackend.repositories.AppUserRepository;
+import org.example.dziennikbackend.utils.DTOMapper;
+import org.example.dziennikbackend.utils.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,37 +26,16 @@ public class AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-    private AppUserDTO changeUserToDTO(AppUser user) {
-        AppUserDTO userDTO = new AppUserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setName(user.getName());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setSurname(user.getSurname());
-        userDTO.setLogin(user.getLogin());
-        return userDTO;
-    }
-
-    private AppUser changeUserToEntity(AppUserDTO userDTO) {
-        AppUser user = new AppUser();
-        user.setEmail(userDTO.getEmail());
-        user.setName(userDTO.getName());
-        user.setSurname(userDTO.getSurname());
-        user.setLogin(userDTO.getLogin());
-        user.setPassword(userDTO.getPassword());
-        return user;
-    }
-
     @Transactional
-    public AppUserDTO validateCredentials(AuthDTO authDTO) {
+    public AppUserDTO validateCredentials(AuthDTO authDTO) throws ResourceNotFoundException {
         Optional<AppUser> user = appUserRepository.findByLogin(authDTO.getLogin());
         if (user.isEmpty()) {
-            return null;
+            throw new ResourceNotFoundException("Validate Credentials: " + authDTO.getLogin());
         }
         if (!passwordEncoder.matches(authDTO.getPassword(), user.get().getPassword())) {
             return null;
         }
-        return changeUserToDTO(user.get());
+        return DTOMapper.map(user.get(), AppUserDTO.class);
     }
 
     @Transactional
@@ -63,18 +44,15 @@ public class AuthService {
         if (newUser.isPresent()) {
             return null;
         }
-        newUser = Optional.of(appUserRepository.save(changeUserToEntity(user)));
+        newUser = Optional.of(appUserRepository.save(DTOMapper.map(user, AppUser.class)));
         newUser.get().setPassword(passwordEncoder.encode(user.getPassword()));
-        return changeUserToDTO(newUser.get());
+        return DTOMapper.map(newUser, AppUserDTO.class);
     }
 
     @Transactional
     public AppUserDTO getUserByLogin(JwtTokenDTO token) throws Exception {
         String username = jwtUtil.extractUsernameFromToken(token.getToken());
         Optional<AppUser> user = appUserRepository.findByLogin(username);
-        if (user.isEmpty()) {
-            return null;
-        }
-        return changeUserToDTO(user.get());
+        return user.map(appUser -> DTOMapper.map(appUser, AppUserDTO.class)).orElse(null);
     }
 }
