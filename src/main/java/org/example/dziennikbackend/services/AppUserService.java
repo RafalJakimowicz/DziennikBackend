@@ -54,26 +54,6 @@ public class AppUserService {
     }
 
     @Transactional
-    public AppUserDTO updateUser(Long id, AppUserDTO user) throws ResourceNotFoundException {
-        Optional<AppUser> userOptional = appUserRepository.findById(id);
-        if(userOptional.isEmpty()){
-            throw new ResourceNotFoundException("Update User: " + id.toString());
-        }
-        if (user.getLogin() != null) {
-            userOptional.get().setLogin(user.getLogin());
-        } if (user.getName() != null) {
-            userOptional.get().setName(user.getName());
-        } if (user.getEmail() != null) {
-            userOptional.get().setEmail(user.getEmail());
-        } if (user.getSurname() != null) {
-            userOptional.get().setSurname(user.getSurname());
-        }
-        AppUser savedUser = appUserRepository.save(userOptional.get());
-        savedUser.setPassword(null);
-        return DTOMapper.map(savedUser, AppUserDTO.class);
-    }
-
-    @Transactional
     public AppUserDTO updatePassword(Long id, String oldPassword, String newPassword) throws ResourceNotFoundException {
         if (oldPassword == null || passwordEncoder.matches(newPassword, oldPassword) || newPassword == null){
             return null;

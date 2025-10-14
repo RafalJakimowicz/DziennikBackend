@@ -6,6 +6,7 @@ import org.example.dziennikbackend.models.DTOs.PasswordsDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
 import org.example.dziennikbackend.services.AppUserService;
 import org.example.dziennikbackend.services.AuthService;
+import org.example.dziennikbackend.utils.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,10 +46,13 @@ public class AppUserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AppUserDTO> getUserById(@PathVariable Long id) {
-        AppUserDTO user = appUserService.getUserById(id);
-        if(user == null){
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<AppUserDTO> getUserById(@PathVariable Long id){
+        AppUserDTO user;
+        try {
+            user = appUserService.getUserById(id);
+        }
+        catch (ResourceNotFoundException rnfe) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(user);
     }
@@ -58,20 +62,14 @@ public class AppUserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(appUserService.createUser(user));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AppUserDTO> updateUser(@PathVariable Long id, @RequestBody AppUserDTO user) {
-        AppUserDTO updatedUser = appUserService.updateUser(id, user);
-        if(updatedUser == null){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updatedUser);
-    }
-
     @PutMapping("/{id}/password")
-    public ResponseEntity<AppUserDTO> updateUserPassword(@PathVariable Long id, @RequestBody PasswordsDTO upDTO) {
-        AppUserDTO user = appUserService.updatePassword(id, upDTO.getOldPassword(), upDTO.getNewPassword());
-        if(user == null){
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> updateUserPassword(@PathVariable Long id, @RequestBody PasswordsDTO upDTO) {
+        AppUserDTO user;
+        try {
+            user = appUserService.updatePassword(id, upDTO.getOldPassword(), upDTO.getNewPassword());
+        }
+        catch (ResourceNotFoundException rnfe) {
+            return ResponseEntity.notFound().body(rnfe.toString());
         }
         return ResponseEntity.ok(user);
     }
