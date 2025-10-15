@@ -4,6 +4,9 @@ import org.example.dziennikbackend.models.DTOs.AttendanceDTO;
 import org.example.dziennikbackend.models.DTOs.AttendanceStatusDTO;
 import org.example.dziennikbackend.models.Entities.Attendance;
 import org.example.dziennikbackend.services.AttendanceService;
+import org.example.dziennikbackend.utils.ErrorMessage;
+import org.example.dziennikbackend.utils.ResourceNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,23 +18,32 @@ public class AttendanceController {
         this.attendanceService = attendanceService;
     }
 
+    /**
+     * Creates new attendance
+     * @param attendance {@link AttendanceDTO}
+     * @return OK status after creation
+     */
     @PostMapping
     public ResponseEntity<AttendanceDTO> createAttendance(@RequestBody AttendanceDTO attendance) {
         return ResponseEntity.ok(attendanceService.createAttendance(attendance));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AttendanceDTO> updateAttendance(@PathVariable Long id, @RequestBody AttendanceDTO attendance) {
-        AttendanceDTO upadatedAttendance = attendanceService.updateAttendance(id, attendance);
-        if (upadatedAttendance != null) {
-            return ResponseEntity.ok(upadatedAttendance);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
+    /**
+     * Updates attendance status
+     * @param id Attendance id
+     * @param status status to be changed to
+     * @return {@link AttendanceDTO} if successful otherwise returns {@link ErrorMessage} with error data
+     */
     @PutMapping("/{id}/status")
-    public ResponseEntity<AttendanceDTO> updateAttendanceStatus(@PathVariable Long id, @RequestParam AttendanceStatusDTO status) {
-        AttendanceDTO updated = attendanceService.updateAttendanceStatus(id, status.getAttendanceStatus());
+    public ResponseEntity<?> updateAttendanceStatus(@PathVariable Long id, @RequestParam AttendanceStatusDTO status) {
+        AttendanceDTO updated;
+        try {
+            updated = attendanceService.updateAttendanceStatus(id, status.getAttendanceStatus());
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ErrorMessage().getObject("Updating attendance status", e.toString(), 400)
+            );
+        }
         if (updated != null) {
             return ResponseEntity.ok(updated);
         }
