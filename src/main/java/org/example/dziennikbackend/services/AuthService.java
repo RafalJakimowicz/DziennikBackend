@@ -8,6 +8,7 @@ import org.example.dziennikbackend.models.DTOs.JwtTokenDTO;
 import org.example.dziennikbackend.models.Entities.AppUser;
 import org.example.dziennikbackend.repositories.AppUserRepository;
 import org.example.dziennikbackend.utils.DTOMapper;
+import org.example.dziennikbackend.utils.ResourceConflictException;
 import org.example.dziennikbackend.utils.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,22 +28,22 @@ public class AuthService {
     }
 
     @Transactional
-    public AppUserDTO validateCredentials(AuthDTO authDTO) throws ResourceNotFoundException {
+    public AppUserDTO validateCredentials(AuthDTO authDTO) throws ResourceNotFoundException, ResourceConflictException {
         Optional<AppUser> user = appUserRepository.findByLogin(authDTO.getLogin());
         if (user.isEmpty()) {
-            throw new ResourceNotFoundException("Validate Credentials: " + authDTO.getLogin());
+            throw new ResourceNotFoundException("User not found");
         }
         if (!passwordEncoder.matches(authDTO.getPassword(), user.get().getPassword())) {
-            return null;
+            throw new ResourceConflictException("Wrong password");
         }
         return DTOMapper.map(user.get(), AppUserDTO.class);
     }
 
     @Transactional
-    public AppUserDTO registerUser(AppUserDTO user){
+    public AppUserDTO registerUser(AppUserDTO user) throws  ResourceConflictException {
         Optional<AppUser> newUser = appUserRepository.findByLogin(user.getLogin());
         if (newUser.isPresent()) {
-            return null;
+            throw new ResourceConflictException("This login is already taken");
         }
         newUser = Optional.of(appUserRepository.save(DTOMapper.map(user, AppUser.class)));
         newUser.get().setPassword(passwordEncoder.encode(user.getPassword()));
@@ -50,9 +51,12 @@ public class AuthService {
     }
 
     @Transactional
-    public AppUserDTO getUserByLogin(JwtTokenDTO token) throws Exception {
+    public AppUserDTO getUserByLogin(JwtTokenDTO token) throws ResourceNotFoundException {
         String username = jwtUtil.extractUsernameFromToken(token.getToken());
         Optional<AppUser> user = appUserRepository.findByLogin(username);
+        if (user.isEmpty()) {
+            throw new ResourceNotFoundException("Login not found");
+        }
         return user.map(appUser -> DTOMapper.map(appUser, AppUserDTO.class)).orElse(null);
     }
 }

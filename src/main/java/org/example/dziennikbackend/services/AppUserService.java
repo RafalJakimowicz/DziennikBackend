@@ -38,7 +38,7 @@ public class AppUserService {
         Optional<AppUser> user = appUserRepository.findById(id);
         AppUser appUser = user.orElse(null);
         if(appUser == null){
-            throw new ResourceNotFoundException("Get User: " + id.toString());
+            throw new ResourceNotFoundException("Error while getting user: " + id.toString());
         }
         appUser.setPassword(null);
         return DTOMapper.map(appUser, AppUserDTO.class);
@@ -60,7 +60,7 @@ public class AppUserService {
         }
         Optional<AppUser> userOptional = appUserRepository.findById(id);
         if(userOptional.isEmpty()){
-            throw new ResourceNotFoundException("Update User Password: " + id.toString());
+            throw new ResourceNotFoundException("Error while updating User Password: " + id.toString());
         }
         AppUser user = userOptional.get();
         user.setPassword(passwordEncoder.encode(newPassword));
