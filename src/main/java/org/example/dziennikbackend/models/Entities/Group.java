@@ -32,66 +32,10 @@ public class Group {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @OneToMany(
-            mappedBy = "group",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @JsonIgnore
-    private List<Lesson> lessons = new ArrayList<>();
-
-    @OneToMany(
-            mappedBy = "group",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @JsonIgnore
-    private List<StudentInGroup> studentInGroups = new ArrayList<>();
-
-    @OneToMany(
-            mappedBy = "group",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @JsonIgnore
-    private List<Grade> grades = new ArrayList<>();
-
     public Group() {}
     public Group(String code, AppUser user){
         this.code = code;
         this.user = user;
     }
 
-    public void removeGrade(Grade grade){
-        this.grades.remove(grade);
-        grade.setGroup(null);
-    }
-
-    public void addGrade(Grade grade){
-        this.grades.add(grade);
-        grade.setGroup(this);
-    }
-
-    public void removeStudentInGroup(StudentInGroup sg){
-        this.studentInGroups.remove(sg);
-        sg.setGroup(null);
-    }
-
-    public void addStudentInGroup(StudentInGroup sg){
-        this.studentInGroups.add(sg);
-        sg.setGroup(this);
-    }
-
-    public void removeLesson(Lesson lesson){
-        this.lessons.remove(lesson);
-        lesson.setGroup(null);
-    }
-
-    public void addLesson(Lesson lesson){
-        this.lessons.add(lesson);
-        lesson.setGroup(this);
-    }
 }

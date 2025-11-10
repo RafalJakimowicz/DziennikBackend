@@ -31,14 +31,6 @@ public class Lesson {
 
     private String room;
 
-    @OneToMany(
-            mappedBy = "lesson",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    private List<Attendance> attendances = new ArrayList<>();
-
     public Lesson() {}
     public Lesson(Group group, LocalDateTime start_date, LocalDateTime end_date, String subject, String room){
         this.group = group;
@@ -46,15 +38,5 @@ public class Lesson {
         this.end_date = end_date;
         this.subject = subject;
         this.room = room;
-    }
-
-    public void removeAttendance(Attendance attendance){
-        this.attendances.remove(attendance);
-        attendance.setLesson(null);
-    }
-
-    public void addAttendance(Attendance attendance){
-        this.attendances.add(attendance);
-        attendance.setLesson(this);
     }
 }
