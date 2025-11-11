@@ -17,46 +17,75 @@ import java.util.Optional;
 
 @Service
 public class AuthService {
-    private final AppUserRepository appUserRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final AppUserService appUserService;
 
-    public AuthService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
-        this.appUserRepository = appUserRepository;
-        this.passwordEncoder = passwordEncoder;
+    public AuthService(JwtUtil jwtUtil,  AppUserService appUserService) {
         this.jwtUtil = jwtUtil;
+        this.appUserService = appUserService;
     }
 
+    /**
+     * sprawdza dane logowania uzytkownika
+     * @param authDTO {@link AuthDTO} dane logowania uzytkownika
+     * @return {@link AppUserDTO} zalogowany uzytkownik
+     * @throws ResourceNotFoundException gdy nie ma podanego uzytkownika
+     * @throws ResourceConflictException gdy haslo nie jest poprawne
+     */
     @Transactional
     public AppUserDTO validateCredentials(AuthDTO authDTO) throws ResourceNotFoundException, ResourceConflictException {
-        Optional<AppUser> user = appUserRepository.findByLogin(authDTO.getLogin());
-        if (user.isEmpty()) {
-            throw new ResourceNotFoundException("User not found");
+        Boolean ifmatch = false;
+        try{
+            ifmatch = appUserService.comparePassword(authDTO.getLogin(), authDTO.getPassword());
         }
-        if (!passwordEncoder.matches(authDTO.getPassword(), user.get().getPassword())) {
-            throw new ResourceConflictException("Wrong password");
+        catch (ResourceNotFoundException e){
+            throw new ResourceNotFoundException(e.getMessage());
         }
-        return DTOMapper.map(user.get(), AppUserDTO.class);
+        if (ifmatch) {
+            return appUserService.getUserByLogin(authDTO.getLogin());
+        }
+        else{
+            throw new ResourceConflictException("Password not match");
+        }
     }
 
+    /**
+     * rejestruje nowego uzytkownika
+     * @param user {@link AppUserDTO} uzytkownik
+     * @return {@link AppUserDTO} nowy zajestrwany uzytkownik
+     * @throws ResourceConflictException gdy uzytkownik juz istnieje
+     */
     @Transactional
     public AppUserDTO registerUser(AppUserDTO user) throws  ResourceConflictException {
-        Optional<AppUser> newUser = appUserRepository.findByLogin(user.getLogin());
-        if (newUser.isPresent()) {
+        Boolean isPresent = true;
+        try{
+            AppUserDTO existingUser = appUserService.getUserByLogin(user.getLogin());
+        }
+        catch (ResourceNotFoundException e){
+            isPresent = false;
+        }
+        if (isPresent) {
             throw new ResourceConflictException("This login is already taken");
         }
-        newUser = Optional.of(appUserRepository.save(DTOMapper.map(user, AppUser.class)));
-        newUser.get().setPassword(passwordEncoder.encode(user.getPassword()));
-        return DTOMapper.map(newUser, AppUserDTO.class);
+        AppUserDTO newUser = appUserService.createUser(user);
+        return newUser;
     }
 
+    /**
+     * wyszukuje co loginie w tokenie
+     * @param token {@link JwtTokenDTO} token sesji
+     * @return {@link AppUserDTO} uzytkownik
+     * @throws ResourceNotFoundException gdy nie ma uzytkownika o podanym loginie
+     */
     @Transactional
     public AppUserDTO getUserByLogin(JwtTokenDTO token) throws ResourceNotFoundException {
         String username = jwtUtil.extractUsernameFromToken(token.getToken());
-        Optional<AppUser> user = appUserRepository.findByLogin(username);
-        if (user.isEmpty()) {
-            throw new ResourceNotFoundException("Login not found");
+        try{
+            AppUserDTO existingUser = appUserService.getUserByLogin(username);
+            return existingUser;
         }
-        return user.map(appUser -> DTOMapper.map(appUser, AppUserDTO.class)).orElse(null);
+        catch (ResourceNotFoundException e){
+            throw new ResourceNotFoundException(e.getMessage());
+        }
     }
 }
